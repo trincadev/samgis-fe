@@ -31,3 +31,6 @@ test-results/
 playwright-report/
 
 .env*
+
+# cloudflare workers
+.wrangler
