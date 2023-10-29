@@ -1,6 +1,6 @@
 import { createAuth0 } from "@auth0/auth0-vue";
 import { createApp } from "vue";
-import App from "./app.vue";
+import App from "./App.vue";
 import "./assets/css/styles.css";
 import router from "./router";
 
