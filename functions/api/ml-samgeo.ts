@@ -1,8 +1,5 @@
 export interface Env {
   API_URL: string
-  AUTH0_AUTHOURIZER_CLIENT_ID: string
-  AUTH0_AUTHOURIZER_CLIENT_SECRET: string
-  VITE_AUTH0_AUDIENCE: string
 }
 
 export const onRequest: PagesFunction = async (context) => {
