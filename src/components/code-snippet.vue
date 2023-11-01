@@ -9,9 +9,9 @@
   </div>
 </template>
 
-<script setup>
-const props = defineProps({
-  code: String,
-  title: String,
-});
+<script setup lang="ts">
+const props = defineProps<{
+  code: string,
+  title: string,
+}>()
 </script>

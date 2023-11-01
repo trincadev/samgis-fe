@@ -8,7 +8,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import NavBarBrand from "@/components/navigation/desktop/nav-bar-brand.vue";
 import NavBarButtons from "@/components/navigation/desktop/nav-bar-buttons.vue";
 import NavBarTabs from "@/components/navigation/desktop/nav-bar-tabs.vue";

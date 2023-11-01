@@ -14,13 +14,13 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import MobileMenuToggleButton from "@/components/navigation/mobile/mobile-menu-toggle-button.vue";
 import MobileNavBarBrand from "@/components/navigation/mobile/mobile-nav-bar-brand.vue";
 import MobileNavBarButtons from "@/components/navigation/mobile/mobile-nav-bar-buttons.vue";
 import MobileNavBarTabs from "@/components/navigation/mobile/mobile-nav-bar-tabs.vue";
 import { useRouter } from "vue-router";
-import { mobileMenuStore } from "./mobile-menu.store.js";
+import { mobileMenuStore } from "./mobile-menu.store";
 
 const router = useRouter();
 

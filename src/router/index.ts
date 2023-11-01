@@ -5,9 +5,7 @@ import { createRouter, createWebHistory } from "vue-router";
 
 const NotFoundPage = () => import("@/pages/not-found-page.vue");
 const ProfilePage = () => import("@/pages/profile-page.vue");
-const PublicPage = () => import("@/pages/public-page.vue");
 const ProtectedPage = () => import("@/pages/protected-page.vue");
-const AdminPage = () => import("@/pages/admin-page.vue");
 const PredictionMap = () => import("@/pages/prediction-map-page.vue");
 
 const routes = [
@@ -23,11 +21,6 @@ const routes = [
     beforeEnter: authGuard,
   },
   {
-    path: "/public",
-    name: "public",
-    component: PublicPage,
-  },
-  {
     path: "/protected",
     name: "protected",
     component: ProtectedPage,
@@ -37,12 +30,6 @@ const routes = [
     path: "/prediction-map",
     name: "map with machine learning",
     component: PredictionMap,
-    beforeEnter: authGuard,
-  },
-  {
-    path: "/admin",
-    name: "admin",
-    component: AdminPage,
     beforeEnter: authGuard,
   },
   {

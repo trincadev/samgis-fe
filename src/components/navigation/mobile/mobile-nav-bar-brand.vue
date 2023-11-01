@@ -12,6 +12,6 @@
   </div>
 </template>
 
-<script setup>
-import { mobileMenuStore } from "./mobile-menu.store.js";
+<script setup lang="ts">
+import { mobileMenuStore } from "./mobile-menu.store";
 </script>

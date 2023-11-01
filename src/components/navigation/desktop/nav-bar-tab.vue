@@ -9,9 +9,9 @@
   </router-link>
 </template>
 
-<script setup>
-const props = defineProps({
-  path: String,
-  label: String,
-});
+<script setup lang="ts">
+const props = defineProps<{
+  path: string,
+  label: string,
+}>()
 </script>

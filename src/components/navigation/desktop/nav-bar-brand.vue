@@ -5,7 +5,7 @@
         class="nav-bar__logo"
         src="https://upload.wikimedia.org/wikiversity/en/6/6c/GIS_Layers.png"
         alt="GIS logo"
-        width="122"
+        width="60"
         height="36"
       />
     </router-link>

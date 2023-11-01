@@ -99,6 +99,7 @@
 }
 
 .page-footer__hyperlink {
+  text-decoration: underline;
   letter-spacing: 0.001rem;
 }
 
