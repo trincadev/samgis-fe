@@ -22,7 +22,12 @@ const props = defineProps<{
   zoom: string
 }>()
 
-const getGeoJSON = async (accessToken, requestBody, urlApi) => {
+interface IBodyLatLngPoints {
+  bbox: Array<number>,
+  points: Array<Array<number>>
+}
+
+const getGeoJSON = async (accessToken: string, requestBody: IBodyLatLngPoints, urlApi: string) => {
   console.log("# getGeoJSON::accessToken:", accessToken, "2#")
   console.log("# getGeoJSON::requestBody:", requestBody, "2#")
   console.log("# getGeoJSON::urlApi:", urlApi, "2#")
@@ -48,11 +53,12 @@ const getGeoJSON = async (accessToken, requestBody, urlApi) => {
   return geojsonOutput.value
 };
 
-const getPopupContent = (leafletMap: L.Map, leafletEvent) => {
+const getPopupContent = (leafletMap: L.Map, leafletEvent: L.Evented) => {
   const boundaries = leafletMap.getBounds()
   const ne = JSON.stringify(boundaries.getNorthEast())
   const sw = JSON.stringify(boundaries.getSouthWest())
   let popupContent: HTMLDivElement = document.createElement("div");
+  console.log("leafletEvent:", typeof leafletEvent, "#")
   popupContent.innerHTML = `point:${JSON.stringify(leafletEvent.layer._latlng)}\nmap:`
   popupContent.innerHTML += `ne:${ne}\nsw:${sw}.`
 
@@ -72,7 +78,8 @@ const getPopupContent = (leafletMap: L.Map, leafletEvent) => {
       points: [[
         leafletEvent.layer._latlng.lat,
         leafletEvent.layer._latlng.lng,
-      ]]
+      ]],
+      test: true
     }
     console.log("bodyLatLngPoints:", bodyLatLngPoints, "#")
     const geojsonOutput = await getGeoJSON(props.accessToken, bodyLatLngPoints, "/api/ml-samgeo/")
@@ -90,6 +97,7 @@ const getPopupContent = (leafletMap: L.Map, leafletEvent) => {
 
 onMounted(async () => {
   const L = await import("leaflet")
+  console.log("L::", typeof L, "#")
   await import("@geoman-io/leaflet-geoman-free")
   const map: L.Map = L.map(`map-predictions-${props.mapName}`)
 
@@ -112,8 +120,8 @@ onMounted(async () => {
   const _actions = [
     {
       text: 'Custom message, with click event',
-      onClick(actionEvent) {
-        console.log("actionEvent:", actionEvent, "")
+      onClick(actionEvent: L.Evented) {
+        console.log("actionEvent:", typeof actionEvent, "|", actionEvent, "")
       },
       name: 'actionName',
     },
@@ -126,7 +134,7 @@ onMounted(async () => {
   });
   map.pm.Draw.MarkerWithPopup.setPathOptions({ color: 'green' })
 
-  map.on('pm:create', (e) => {
+  map.on('pm:create', (e: L.Evented) => {
     if (e.shape === 'MarkerWithPopup') {
       const div = getPopupContent(map, e)
       e.layer.bindPopup(div).openPopup();
