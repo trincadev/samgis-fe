@@ -8,7 +8,7 @@
                 </p>
 
                 <div id="map-container-md">
-                    <PredictionMap :center='[46.144436, 9.377447]' :mapName="mapName" zoom=15 />
+                    <PredictionMap :center='[46.144436, 9.377447]' :mapName="mapName" zoom=15 :accessToken="accessToken"/>
                 </div>
             </div>
         </div>
@@ -16,9 +16,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
+import { useAuth0 } from "@auth0/auth0-vue";
+
 import PredictionMap from '@/components/page-prediction-map.vue';
 import PageLayout from "@/components/page-layout.vue";
 
 const mapName = ref("prediction-map");
+const accessToken = ref("placeholder");
+
+const getAccessToken = async () => {
+  const { getAccessTokenSilently } = useAuth0();
+  accessToken.value = await getAccessTokenSilently();
+};
+
+onMounted( async() => {
+    await getAccessToken()
+})
 </script>

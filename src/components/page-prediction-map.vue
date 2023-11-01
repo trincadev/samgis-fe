@@ -1,23 +1,52 @@
 <template>
   <div class="map-predictions" :id="'map-predictions-' + props.mapName" />
+  <p>geojson: {{ geojsonOutput }}</p>
 </template>
 
 <script setup lang="ts">
 import "leaflet/dist/leaflet.css";
 import "@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css";
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import { LatLngTuple } from "leaflet";
 
 import { maxZoom, minZoom } from "../components/constants";
 
 const attribution: string = "&copy; <a target=\"_blank\" href=\"https://osm.org/copyright\">OpenStreetMap</a> contributors "
 const prefix: string = " &copy; <a target=\"_blank\" href=\"https://leafletjs.com\">leaflet</a>"
+const geojsonOutput = ref("geojsonOutput-placeholder")
 
 const props = defineProps<{
+  accessToken: string,
   center: LatLngTuple,
   mapName: string,
   zoom: string
 }>()
+
+const getGeoJSON = async (accessToken, requestBody, urlApi) => {
+  console.log("# getGeoJSON::accessToken:", accessToken, "2#")
+  console.log("# getGeoJSON::requestBody:", requestBody, "2#")
+  console.log("# getGeoJSON::urlApi:", urlApi, "2#")
+  console.log("# env:", import.meta.env, "2#")
+
+  const data = await fetch(urlApi, {
+    method: "POST",
+    body: JSON.stringify(requestBody),
+    headers: {
+      "Authorization": `Bearer ${accessToken}`,
+      "Content-type": "application/json"
+    }
+  })
+  console.log("data:", data, "#")
+  let output;
+  if (data.statusCode === 200) {
+    output = await data.json()
+  } else {
+    output = await data.text()
+  }
+  console.log("output:", output, "#")
+  geojsonOutput.value = JSON.stringify(output, null, 2);
+  return geojsonOutput.value
+};
 
 const getPopupContent = (leafletMap: L.Map, leafletEvent) => {
   const boundaries = leafletMap.getBounds()
@@ -26,11 +55,35 @@ const getPopupContent = (leafletMap: L.Map, leafletEvent) => {
   let popupContent: HTMLDivElement = document.createElement("div");
   popupContent.innerHTML = `point:${JSON.stringify(leafletEvent.layer._latlng)}\nmap:`
   popupContent.innerHTML += `ne:${ne}\nsw:${sw}.`
+
   console.log("e::", leafletEvent, "#")
+  const a: HTMLAnchorElement = document.createElement("a");
+
+  a.id = `popup-a-${leafletEvent.layer._leaflet_id}`
+  a.className = "leaflet-popup-span-title"
+  a.onclick = async function eventClick(event) {
+    event.preventDefault()
+    console.log(`popup-click:${leafletEvent.layer._leaflet_id}.`)
+    const bodyLatLngPoints = {
+      bbox: [
+        boundaries.getNorthEast().lat, boundaries.getNorthEast().lng,
+        boundaries.getSouthWest().lat, boundaries.getSouthWest().lng,
+      ],
+      points: [[
+        leafletEvent.layer._latlng.lat,
+        leafletEvent.layer._latlng.lng,
+      ]]
+    }
+    console.log("bodyLatLngPoints:", bodyLatLngPoints, "#")
+    const geojsonOutput = await getGeoJSON(props.accessToken, bodyLatLngPoints, "/api/ml-samgeo/")
+    console.log("geojsonOutput:", geojsonOutput, "#")
+  }
+  a.innerHTML = "fire prediction"
 
   const popupDiv: HTMLDivElement = document.createElement("div");
   popupDiv.className = "leaflet-popup-content-inner"
   popupDiv.appendChild(popupContent)
+  popupDiv.appendChild(a)
 
   return popupDiv
 }

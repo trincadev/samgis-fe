@@ -1,29 +1,29 @@
-import CallbackPage from "@/pages/callback-page.vue";
-import HomePage from "@/pages/home-page.vue";
+import Callback from "@/views/Callback.vue";
+import Home from "@/views/Home.vue";
 import { authGuard } from "@auth0/auth0-vue";
 import { createRouter, createWebHistory } from "vue-router";
 
-const NotFoundPage = () => import("@/pages/not-found-page.vue");
-const ProfilePage = () => import("@/pages/profile-page.vue");
-const ProtectedPage = () => import("@/pages/protected-page.vue");
-const PredictionMap = () => import("@/pages/prediction-map-page.vue");
+const NotFound = () => import("@/views/NotFound.vue");
+const Profile = () => import("@/views/Profile.vue");
+const Protected = () => import("@/views/Protected.vue");
+const PredictionMap = () => import("@/views/PredictionMap.vue");
 
 const routes = [
   {
     path: "/",
     name: "home",
-    component: HomePage,
+    component: Home,
   },
   {
     path: "/profile",
     name: "profile",
-    component: ProfilePage,
+    component: Profile,
     beforeEnter: authGuard,
   },
   {
     path: "/protected",
     name: "protected",
-    component: ProtectedPage,
+    component: Protected,
     beforeEnter: authGuard,
   },
   {
@@ -35,12 +35,12 @@ const routes = [
   {
     path: "/callback",
     name: "callback",
-    component: CallbackPage,
+    component: Callback,
   },
   {
     path: "/:catchAll(.*)",
     name: "Not Found",
-    component: NotFoundPage,
+    component: NotFound,
   },
 ];
 

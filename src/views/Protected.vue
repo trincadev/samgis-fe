@@ -15,7 +15,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useAuth0 } from "@auth0/auth0-vue";
 
 import CodeSnippet from "@/components/code-snippet.vue";
@@ -49,11 +49,10 @@ const getMessage = async () => {
     output = await data.text()
   }
   console.log("output:", output, "#")
-  if (output) {
-    message.value = JSON.stringify(output, null, 2);
-  }
-
+  return JSON.stringify(output, null, 2);
 };
 
-getMessage();
+onMounted( async () => {
+  message.value = await getMessage();
+})
 </script>
