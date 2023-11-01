@@ -4,6 +4,7 @@
     <NavBarTab path="/public" label="Public" />
     <template v-if="isAuthenticated">
       <NavBarTab path="/protected" label="Protected" />
+      <NavBarTab path="/prediction-map" label="Prediction Map" />
       <NavBarTab path="/admin" label="Admin" />
     </template>
   </div>
