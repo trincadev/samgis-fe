@@ -14,7 +14,6 @@ const auth0options = {
     redirect_uri: import.meta.env.VITE_AUTH0_CALLBACK_URL,
   },
 }
-console.log("auth0options::", auth0options, "#")
 app
   .use(router)
   .use(
