@@ -1,19 +1,21 @@
 <template>
-  <div class="map-predictions" :id="'map-predictions-' + props.mapName" />
-  <p>geojson: {{ geojsonOutput }}</p>
+  <div class="map-predictions" id="map" />
+  <p>geojson: {{ geojsonRef }}</p>
 </template>
 
 <script setup lang="ts">
+import L, { LatLngTuple } from "leaflet";
+import "@geoman-io/leaflet-geoman-free";
 import "leaflet/dist/leaflet.css";
 import "@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css";
 import { onMounted, ref } from "vue";
-import { LatLngTuple } from "leaflet";
 
 import { maxZoom, minZoom } from "../components/constants";
 
 const attribution: string = "&copy; <a target=\"_blank\" href=\"https://osm.org/copyright\">OpenStreetMap</a> contributors "
 const prefix: string = " &copy; <a target=\"_blank\" href=\"https://leafletjs.com\">leaflet</a>"
-const geojsonOutput = ref("geojsonOutput-placeholder")
+const geojsonRef = ref("geojsonOutput-placeholder")
+let map: L.map;
 
 const props = defineProps<{
   accessToken: string,
@@ -32,25 +34,22 @@ const getGeoJSON = async (accessToken: string, requestBody: IBodyLatLngPoints, u
   console.log("# getGeoJSON::requestBody:", requestBody, "2#")
   console.log("# getGeoJSON::urlApi:", urlApi, "2#")
   console.log("# env:", import.meta.env, "2#")
-
-  const data = await fetch(urlApi, {
+  
+  const data = await fetch("/api/ml-samgeo/", {
     method: "POST",
     body: JSON.stringify(requestBody),
     headers: {
-      "Authorization": `Bearer ${accessToken}`,
+      "Authorization": `Bearer ${props.accessToken}`,
       "Content-type": "application/json"
     }
   })
-  console.log("data:", data, "#")
-  let output;
-  if (data.statusCode === 200) {
-    output = await data.json()
-  } else {
-    output = await data.text()
-  }
-  console.log("output:", output, "#")
-  geojsonOutput.value = JSON.stringify(output, null, 2);
-  return geojsonOutput.value
+  const output = await data.json()
+  console.log("getGeoJSON => output:", typeof output, "|", output, "#")
+  const parsed = JSON.parse(output)
+  console.log("getGeoJSON => parsed:", typeof parsed, "|", parsed, "#")
+  geojsonRef.value = JSON.stringify(parsed.geojson)
+  console.log("getGeoJSON => geojsonRef.value:", typeof geojsonRef.value, "|", geojsonRef.value, "#")
+  return JSON.parse(parsed.geojson)
 };
 
 const getPopupContent = (leafletMap: L.Map, leafletEvent: L.Evented) => {
@@ -58,7 +57,7 @@ const getPopupContent = (leafletMap: L.Map, leafletEvent: L.Evented) => {
   const ne = JSON.stringify(boundaries.getNorthEast())
   const sw = JSON.stringify(boundaries.getSouthWest())
   let popupContent: HTMLDivElement = document.createElement("div");
-  console.log("leafletEvent:", typeof leafletEvent, "#")
+  console.log("getPopupContent => leafletEvent:", typeof leafletEvent, "#")
   popupContent.innerHTML = `point:${JSON.stringify(leafletEvent.layer._latlng)}\nmap:`
   popupContent.innerHTML += `ne:${ne}\nsw:${sw}.`
 
@@ -67,9 +66,9 @@ const getPopupContent = (leafletMap: L.Map, leafletEvent: L.Evented) => {
 
   a.id = `popup-a-${leafletEvent.layer._leaflet_id}`
   a.className = "leaflet-popup-span-title"
-  a.onclick = async function eventClick(event) {
+  a.onclick = async function eventClick(event: Event) {
     event.preventDefault()
-    console.log(`popup-click:${leafletEvent.layer._leaflet_id}.`)
+    console.log(`getPopupContent => popup-click:${leafletEvent.layer._leaflet_id}.`)
     const bodyLatLngPoints = {
       bbox: [
         boundaries.getNorthEast().lat, boundaries.getNorthEast().lng,
@@ -81,9 +80,11 @@ const getPopupContent = (leafletMap: L.Map, leafletEvent: L.Evented) => {
       ]],
       test: true
     }
-    console.log("bodyLatLngPoints:", bodyLatLngPoints, "#")
-    const geojsonOutput = await getGeoJSON(props.accessToken, bodyLatLngPoints, "/api/ml-samgeo/")
-    console.log("geojsonOutput:", geojsonOutput, "#")
+    console.log("getPopupContent => bodyLatLngPoints:", bodyLatLngPoints, "#")
+    const geojsonOutputOnMounted = await getGeoJSON(props.accessToken, bodyLatLngPoints, "/api/ml-samgeo/")
+    console.log("getPopupContent => geojsonOutputOnMounted:", geojsonOutputOnMounted, "#")
+    const featureNew = L.geoJSON(geojsonOutputOnMounted);
+    leafletMap.addLayer(featureNew);
   }
   a.innerHTML = "fire prediction"
 
@@ -96,12 +97,7 @@ const getPopupContent = (leafletMap: L.Map, leafletEvent: L.Evented) => {
 }
 
 onMounted(async () => {
-  const L = await import("leaflet")
-  console.log("L::", typeof L, "#")
-  await import("@geoman-io/leaflet-geoman-free")
-  const map: L.Map = L.map(`map-predictions-${props.mapName}`)
-
-  map.setView([...props.center], Number(props.zoom))
+  map = L.map("map").setView(props.center, props.zoom);
   map.attributionControl.setPrefix(prefix)
   L.control.scale({ position: "topright", imperial: false, metric: true }).addTo(map);
   L.tileLayer("https://{s}.tile.osm.org/{z}/{x}/{y}.png", {
@@ -140,9 +136,7 @@ onMounted(async () => {
       e.layer.bindPopup(div).openPopup();
     }
   });
-
-  return { map }
-})
+});
 </script>
 
 <style scoped>
