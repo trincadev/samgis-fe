@@ -24,9 +24,22 @@ const props = defineProps<{
   zoom: string
 }>()
 
+interface BboxLatLngTuple {
+  ne: LatLngTuple,
+  sw: LatLngTuple
+}
+
+interface IPrompt {
+  type: string,
+  data: BboxLatLngTuple,
+  label: number
+}
+
 interface IBodyLatLngPoints {
-  bbox: Array<number>,
-  points: Array<Array<number>>
+  bbox: BboxLatLngTuple,
+  prompt: Array<IPrompt>,
+  zoom: number,
+  source_type: string
 }
 
 const getGeoJSON = async (accessToken: string, requestBody: IBodyLatLngPoints, urlApi: string) => {
@@ -34,8 +47,8 @@ const getGeoJSON = async (accessToken: string, requestBody: IBodyLatLngPoints, u
   console.log("# getGeoJSON::requestBody:", requestBody, "2#")
   console.log("# getGeoJSON::urlApi:", urlApi, "2#")
   console.log("# env:", import.meta.env, "2#")
-  
-  const data = await fetch("/api/ml-samgeo/", {
+
+  const data = await fetch(urlApi, {
     method: "POST",
     body: JSON.stringify(requestBody),
     headers: {
@@ -52,16 +65,29 @@ const getGeoJSON = async (accessToken: string, requestBody: IBodyLatLngPoints, u
   return JSON.parse(parsed.geojson)
 };
 
-const getPopupContent = (leafletMap: L.Map, leafletEvent: L.Evented) => {
-  const boundaries = leafletMap.getBounds()
-  const ne = JSON.stringify(boundaries.getNorthEast())
-  const sw = JSON.stringify(boundaries.getSouthWest())
-  let popupContent: HTMLDivElement = document.createElement("div");
-  console.log("getPopupContent => leafletEvent:", typeof leafletEvent, "#")
-  popupContent.innerHTML = `point:${JSON.stringify(leafletEvent.layer._latlng)}\nmap:`
-  popupContent.innerHTML += `ne:${ne}\nsw:${sw}.`
+const getSelectedRectangleCoordinatesBBox = (leafletEvent: L.Map): BboxLatLngTuple => {
+  const { _northEast: ne, _southWest: sw } = leafletEvent.layer._bounds
+  const bbox: BboxLatLngTuple = { ne, sw }
+  return bbox
+}
 
-  console.log("e::", leafletEvent, "#")
+const getExtentCurrentViewMapBBox = (leafletMap: L.Map): BboxLatLngTuple => {
+  const boundaries = leafletMap.getBounds()
+  return { ne: boundaries.getNorthEast(), sw: boundaries.getSouthWest() }
+}
+
+const getPopupContent = (leafletMap: L.Map, leafletEvent: L.Evented) => {
+  const bbox = getExtentCurrentViewMapBBox(leafletMap)
+  let popupContent: HTMLDivElement = document.createElement("div");
+  console.log("getPopupContent => mapBBox:", typeof bbox, "|", bbox, "#") // leafletEvent, leafletMap
+  const currentZoom = leafletMap.getZoom()
+  // leafletEvent.shape === "RectangleWithPopup"
+  let currentBboxLayer: BboxLatLngTuple = getSelectedRectangleCoordinatesBBox(leafletEvent)
+
+  popupContent.innerHTML = `point:${JSON.stringify(currentBboxLayer)}... \nmap:`
+  popupContent.innerHTML += `mapBBox: ${JSON.stringify(bbox)}... \n`
+  popupContent.innerHTML += `zoom:${currentZoom}.`
+
   const a: HTMLAnchorElement = document.createElement("a");
 
   a.id = `popup-a-${leafletEvent.layer._leaflet_id}`
@@ -69,19 +95,18 @@ const getPopupContent = (leafletMap: L.Map, leafletEvent: L.Evented) => {
   a.onclick = async function eventClick(event: Event) {
     event.preventDefault()
     console.log(`getPopupContent => popup-click:${leafletEvent.layer._leaflet_id}.`)
-    const bodyLatLngPoints = {
-      bbox: [
-        boundaries.getNorthEast().lat, boundaries.getNorthEast().lng,
-        boundaries.getSouthWest().lat, boundaries.getSouthWest().lng,
-      ],
-      points: [[
-        leafletEvent.layer._latlng.lat,
-        leafletEvent.layer._latlng.lng,
-      ]],
-      test: true
+    const bodyLatLngPoints: IBodyLatLngPoints = {
+      bbox: bbox,
+      prompt: [{
+        "type": "rectangle",
+        "data": currentBboxLayer,
+        "label": 0
+      }],
+      zoom: currentZoom,
+      source_type: "Satellite"
     }
     console.log("getPopupContent => bodyLatLngPoints:", bodyLatLngPoints, "#")
-    const geojsonOutputOnMounted = await getGeoJSON(props.accessToken, bodyLatLngPoints, "/api/ml-samgeo/")
+    const geojsonOutputOnMounted = await getGeoJSON(props.accessToken, bodyLatLngPoints, "/api/ml-fastsam/2/")
     console.log("getPopupContent => geojsonOutputOnMounted:", geojsonOutputOnMounted, "#")
     const featureNew = L.geoJSON(geojsonOutputOnMounted);
     leafletMap.addLayer(featureNew);
@@ -125,13 +150,20 @@ onMounted(async () => {
   map.pm.Toolbar.copyDrawControl('Marker', {
     name: 'MarkerWithPopup',
     block: 'custom',
-    title: 'Display text on hover button',
+    title: 'Marker - Display text on hover button',
+    actions: _actions,
+  });
+  map.pm.Toolbar.copyDrawControl('Rectangle', {
+    name: 'RectangleWithPopup',
+    block: 'custom',
+    title: 'Rectangle - Display text on hover button',
     actions: _actions,
   });
   map.pm.Draw.MarkerWithPopup.setPathOptions({ color: 'green' })
+  map.pm.Draw.RectangleWithPopup.setPathOptions({ color: 'green' })
 
   map.on('pm:create', (e: L.Evented) => {
-    if (e.shape === 'MarkerWithPopup') {
+    if (e.shape === 'MarkerWithPopup' || e.shape === 'RectangleWithPopup') {
       const div = getPopupContent(map, e)
       e.layer.bindPopup(div).openPopup();
     }

@@ -1,8 +1,9 @@
 export interface Env {
   API_URL: string
+  API_DOMAIN: string
 }
 
-export const onRequest: PagesFunction = async (context) => {
+export const onRequest: PagesFunction<Env> = async (context) => {
   console.log('onRequest::context:', context, '#')
   try {
     const { request, env } = context
@@ -29,13 +30,13 @@ export const onRequest: PagesFunction = async (context) => {
 
     const apiResponse = await fetch(apiNewRequest)
     console.log('onRequest::apiResponse:', apiResponse, '#')
-    const bodyResponse = await apiResponse.json()
-    console.log('onRequest::bodyResponse:', typeof bodyResponse, "|", typeof bodyResponse.statusCode, "|", bodyResponse, '#')
+    const bodyResponse: Response = await apiResponse.json()
+    console.log('onRequest::bodyResponse:', typeof bodyResponse, "|", typeof bodyResponse.status, typeof bodyResponse.statusCode, "|", bodyResponse, '#')
 
-    if (bodyResponse.statusCode === 200) {
+    if (bodyResponse.statusCode === 200 || bodyResponse.status === 200) {
       return new Response(JSON.stringify(bodyResponse.body))
     } else {
-      return new Response(`Error: API statusCode ${bodyResponse.statusCode} from API`, {
+      return new Response(`Error: API statusCode ${bodyResponse.statusCode} / ${bodyResponse.status} from API`, {
         status: bodyResponse.statusCode
       })
     }
