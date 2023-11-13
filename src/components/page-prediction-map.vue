@@ -1,5 +1,7 @@
 <template>
-  <div class="map-predictions" id="map" />
+  <div class="map-predictions-container">
+    <div class="map-predictions" id="map" />
+  </div>
   <p>geojson: {{ geojsonRef }}</p>
 </template>
 
@@ -84,7 +86,7 @@ const getPopupContent = (leafletMap: L.Map, leafletEvent: L.Evented) => {
   // leafletEvent.shape === "RectangleWithPopup"
   let currentBboxLayer: BboxLatLngTuple = getSelectedRectangleCoordinatesBBox(leafletEvent)
 
-  popupContent.innerHTML = `point:${JSON.stringify(currentBboxLayer)}... \nmap:`
+  popupContent.innerHTML = `${leafletEvent.shape}:${JSON.stringify(currentBboxLayer)}... \nmap:`
   popupContent.innerHTML += `mapBBox: ${JSON.stringify(bbox)}... \n`
   popupContent.innerHTML += `zoom:${currentZoom}.`
 
@@ -105,8 +107,8 @@ const getPopupContent = (leafletMap: L.Map, leafletEvent: L.Evented) => {
       zoom: currentZoom,
       source_type: "Satellite"
     }
-    console.log("getPopupContent => bodyLatLngPoints:", bodyLatLngPoints, "#")
-    const geojsonOutputOnMounted = await getGeoJSON(props.accessToken, bodyLatLngPoints, "/api/ml-fastsam/2/")
+    console.log("getPopupContent => bodyLatLngPoints:", JSON.stringify(bodyLatLngPoints), "#")
+    const geojsonOutputOnMounted = await getGeoJSON(props.accessToken, bodyLatLngPoints, "/api/ml-fastsam/")
     console.log("getPopupContent => geojsonOutputOnMounted:", geojsonOutputOnMounted, "#")
     const featureNew = L.geoJSON(geojsonOutputOnMounted);
     leafletMap.addLayer(featureNew);
@@ -163,7 +165,8 @@ onMounted(async () => {
   map.pm.Draw.RectangleWithPopup.setPathOptions({ color: 'green' })
 
   map.on('pm:create', (e: L.Evented) => {
-    if (e.shape === 'MarkerWithPopup' || e.shape === 'RectangleWithPopup') {
+    if (e.shape === 'RectangleWithPopup') {
+      console.log("popup RectangleWithPopup")
       const div = getPopupContent(map, e)
       e.layer.bindPopup(div).openPopup();
     }
@@ -172,9 +175,11 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+
 .map-predictions {
-  width: 100%;
-  height: 60vh;
+  width: 1024px;
+  height: 684px;
+  display: block;
 }
 
 .leaflet-popup-content-inner {

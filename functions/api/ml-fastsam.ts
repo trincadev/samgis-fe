@@ -30,19 +30,33 @@ export const onRequest: PagesFunction<Env> = async (context) => {
 
     const apiResponse = await fetch(apiNewRequest)
     console.log('onRequest::apiResponse:', apiResponse, '#')
-    const bodyResponse: Response = await apiResponse.json()
-    console.log('onRequest::bodyResponse:', typeof bodyResponse, "|", typeof bodyResponse.status, typeof bodyResponse.statusCode, "|", bodyResponse, '#')
+    const bodyResponse: string = await apiResponse.json()
+    console.log('onRequest::status:', typeof bodyResponse.status, "|", bodyResponse.status, '#')
+    console.log('onRequest::statusCode:', typeof bodyResponse.statusCode, "|", bodyResponse.statusCode, '#')
+    console.log('onRequest::bodyResponse:', typeof bodyResponse, "|", bodyResponse.length, "|", bodyResponse, '#')
 
-    if (bodyResponse.statusCode === 200 || bodyResponse.status === 200) {
-      return new Response(JSON.stringify(bodyResponse.body))
-    } else {
-      return new Response(`Error: API statusCode ${bodyResponse.statusCode} / ${bodyResponse.status} from API`, {
-        status: bodyResponse.statusCode
+    try {
+      const bodyResponseParsed = JSON.parse(bodyResponse)
+      console.log('onRequest:: bodyResponseParsed: ### ', typeof bodyResponseParsed, "|", bodyResponseParsed, '#')
+
+      if (bodyResponseParsed.statusCode === 200) {
+        const innerBodyReponseParsed = bodyResponseParsed.body
+        console.log('onRequest::innerBodyReponseParsed:', typeof innerBodyReponseParsed, "|", innerBodyReponseParsed, '#')
+        return new Response(JSON.stringify(innerBodyReponseParsed))
+      } else {
+        return new Response(`Error: API statusCode ${bodyResponse.statusCode} / ${bodyResponse.status} / ${bodyResponseParsed.statusCode} from API`, {
+          status: bodyResponse.statusCode
+        })
+      }
+    } catch (error_request) {
+      console.log(`error_request:${error_request}.`)
+      return new Response("error parsing JSON content on API response...", {
+        status: 400
       })
     }
   } catch (err) {
     console.error('onRequest::err:', err, '#')
-    return new Response('Error parsing JSON content', {
+    return new Response('Error parsing JSON content on API request...', {
       status: 400
     })
   }
