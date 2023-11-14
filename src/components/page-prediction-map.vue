@@ -34,7 +34,7 @@ interface BboxLatLngTuple {
 interface IPrompt {
   type: string,
   data: BboxLatLngTuple,
-  label: number
+  label?: number
 }
 
 interface IBodyLatLngPoints {
@@ -72,23 +72,27 @@ const getSelectedRectangleCoordinatesBBox = (leafletEvent: L.Map): BboxLatLngTup
   const bbox: BboxLatLngTuple = { ne, sw }
   return bbox
 }
+const getSelectedPointCoordinate = (leafletEvent: L.Evented): LatLngTuple => {
+  return leafletEvent.layer._latlng
+}
 
 const getExtentCurrentViewMapBBox = (leafletMap: L.Map): BboxLatLngTuple => {
   const boundaries = leafletMap.getBounds()
   return { ne: boundaries.getNorthEast(), sw: boundaries.getSouthWest() }
 }
 
-const getPopupContent = (leafletMap: L.Map, leafletEvent: L.Evented) => {
+const getPopupContentPoint = (leafletMap: L.Map, leafletEvent: L.Evented) => {
   const bbox = getExtentCurrentViewMapBBox(leafletMap)
   let popupContent: HTMLDivElement = document.createElement("div");
-  console.log("getPopupContent => mapBBox:", typeof bbox, "|", bbox, "#") // leafletEvent, leafletMap
+  console.log("getPopupContentPoint => mapBBox:", typeof bbox, "|", bbox, "#") // leafletEvent, leafletMap
   const currentZoom = leafletMap.getZoom()
-  // leafletEvent.shape === "RectangleWithPopup"
-  let currentBboxLayer: BboxLatLngTuple = getSelectedRectangleCoordinatesBBox(leafletEvent)
+  let currentPointLayer: LatLngTuple = getSelectedPointCoordinate(leafletEvent)
+  console.log("currentPointLayer:", currentPointLayer, "#")
 
-  popupContent.innerHTML = `${leafletEvent.shape}:${JSON.stringify(currentBboxLayer)}... \nmap:`
-  popupContent.innerHTML += `mapBBox: ${JSON.stringify(bbox)}... \n`
-  popupContent.innerHTML += `zoom:${currentZoom}.`
+  popupContent.innerHTML = `<p>${leafletEvent.shape}:</p>`
+  popupContent.innerHTML += `<p>lat:${JSON.stringify(currentPointLayer.lat)}</p>`
+  popupContent.innerHTML += `<p>lng:${JSON.stringify(currentPointLayer.lng)}</p>`
+  popupContent.innerHTML += `<p>zoom:${currentZoom}</p>`
 
   const a: HTMLAnchorElement = document.createElement("a");
 
@@ -96,20 +100,20 @@ const getPopupContent = (leafletMap: L.Map, leafletEvent: L.Evented) => {
   a.className = "leaflet-popup-span-title"
   a.onclick = async function eventClick(event: Event) {
     event.preventDefault()
-    console.log(`getPopupContent => popup-click:${leafletEvent.layer._leaflet_id}.`)
+    console.log(`getPopupContentPoint => popup-click:${leafletEvent.layer._leaflet_id}.`)
     const bodyLatLngPoints: IBodyLatLngPoints = {
       bbox: bbox,
       prompt: [{
-        "type": "rectangle",
-        "data": currentBboxLayer,
+        "type": "point",
+        "data": currentPointLayer,
         "label": 0
       }],
       zoom: currentZoom,
       source_type: "Satellite"
     }
-    console.log("getPopupContent => bodyLatLngPoints:", JSON.stringify(bodyLatLngPoints), "#")
+    console.log("getPopupContentPoint => bodyLatLngPoints:", JSON.stringify(bodyLatLngPoints), "#")
     const geojsonOutputOnMounted = await getGeoJSON(props.accessToken, bodyLatLngPoints, "/api/ml-fastsam/")
-    console.log("getPopupContent => geojsonOutputOnMounted:", geojsonOutputOnMounted, "#")
+    console.log("getPopupContentPoint => geojsonOutputOnMounted:", geojsonOutputOnMounted, "#")
     const featureNew = L.geoJSON(geojsonOutputOnMounted);
     leafletMap.addLayer(featureNew);
   }
@@ -155,19 +159,11 @@ onMounted(async () => {
     title: 'Marker - Display text on hover button',
     actions: _actions,
   });
-  map.pm.Toolbar.copyDrawControl('Rectangle', {
-    name: 'RectangleWithPopup',
-    block: 'custom',
-    title: 'Rectangle - Display text on hover button',
-    actions: _actions,
-  });
-  map.pm.Draw.MarkerWithPopup.setPathOptions({ color: 'green' })
-  map.pm.Draw.RectangleWithPopup.setPathOptions({ color: 'green' })
 
   map.on('pm:create', (e: L.Evented) => {
-    if (e.shape === 'RectangleWithPopup') {
-      console.log("popup RectangleWithPopup")
-      const div = getPopupContent(map, e)
+    if (e.shape === 'MarkerWithPopup') {
+      console.log("popup MarkerWithPopup")
+      const div = getPopupContentPoint(map, e)
       e.layer.bindPopup(div).openPopup();
     }
   });
