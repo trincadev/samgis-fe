@@ -44,12 +44,7 @@ interface IBodyLatLngPoints {
   source_type: string
 }
 
-const getGeoJSON = async (accessToken: string, requestBody: IBodyLatLngPoints, urlApi: string) => {
-  console.log("# getGeoJSON::accessToken:", accessToken, "2#")
-  console.log("# getGeoJSON::requestBody:", requestBody, "2#")
-  console.log("# getGeoJSON::urlApi:", urlApi, "2#")
-  console.log("# env:", import.meta.env, "2#")
-
+const getGeoJSON = async (requestBody: IBodyLatLngPoints, urlApi: string) => {
   const data = await fetch(urlApi, {
     method: "POST",
     body: JSON.stringify(requestBody),
@@ -112,7 +107,7 @@ const getPopupContentPoint = (leafletMap: L.Map, leafletEvent: L.Evented) => {
       source_type: "Satellite"
     }
     console.log("getPopupContentPoint => bodyLatLngPoints:", JSON.stringify(bodyLatLngPoints), "#")
-    const geojsonOutputOnMounted = await getGeoJSON(props.accessToken, bodyLatLngPoints, "/api/ml-fastsam/")
+    const geojsonOutputOnMounted = await getGeoJSON(bodyLatLngPoints, "/api/ml-fastsam/")
     console.log("getPopupContentPoint => geojsonOutputOnMounted:", geojsonOutputOnMounted, "#")
     const featureNew = L.geoJSON(geojsonOutputOnMounted);
     leafletMap.addLayer(featureNew);
