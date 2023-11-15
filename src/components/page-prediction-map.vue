@@ -78,13 +78,14 @@ const getGeoJSON = async (requestBody: IBodyLatLngPoints, urlApi: string) => {
     durationRef.value = parsed.duration_run
     numberOfPolygonsRef.value = parsed.n_shapes_geojson
     numberOfPredictedMasksRef.value = parsed.n_predictions
+    responseMessageRef.value = ""
     return JSON.parse(parsed.geojson)
   } catch (errorOtherData) {
-    const statusText = await data.statusText
+    const statusText = data.statusText || "no response or uncaught exception!"
     console.error("getGeoJSON => data", data, "#")
     console.error("getGeoJSON => statusText", statusText, "#")
     console.error("getGeoJSON => errorOtherData", errorOtherData, "#")
-    responseMessageRef.value = `error message response: ${statusText}...` || "no response or uncaught exception!"
+    responseMessageRef.value = `error message response: ${statusText}...`
   }
 };
 
