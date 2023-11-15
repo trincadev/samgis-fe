@@ -2,6 +2,10 @@
   <div class="map-predictions-container">
     <div class="map-predictions" id="map" />
   </div>
+  <p>response message: {{ responseMessageRef }}</p>
+  <p>duration request: {{ durationRef }}</p>
+  <p>number Of Polygons: {{ numberOfPolygonsRef }}</p>
+  <p>number Of predicted masks: {{ numberOfPredictedMasksRef }}</p>
   <p>geojson: {{ geojsonRef }}</p>
 </template>
 
@@ -17,6 +21,10 @@ import { maxZoom, minZoom } from "../components/constants";
 const attribution: string = "&copy; <a target=\"_blank\" href=\"https://osm.org/copyright\">OpenStreetMap</a> contributors "
 const prefix: string = " &copy; <a target=\"_blank\" href=\"https://leafletjs.com\">leaflet</a>"
 const geojsonRef = ref("geojsonOutput-placeholder")
+const durationRef = ref(0)
+const numberOfPolygonsRef = ref(0)
+const numberOfPredictedMasksRef = ref(0)
+const responseMessageRef = ref("")
 let map: L.map;
 
 const props = defineProps<{
@@ -53,13 +61,25 @@ const getGeoJSON = async (requestBody: IBodyLatLngPoints, urlApi: string) => {
       "Content-type": "application/json"
     }
   })
-  const output = await data.json()
-  console.log("getGeoJSON => output:", typeof output, "|", output, "#")
-  const parsed = JSON.parse(output)
-  console.log("getGeoJSON => parsed:", typeof parsed, "|", parsed, "#")
-  geojsonRef.value = JSON.stringify(parsed.geojson)
-  console.log("getGeoJSON => geojsonRef.value:", typeof geojsonRef.value, "|", geojsonRef.value, "#")
-  return JSON.parse(parsed.geojson)
+  try {
+    const output = await data.json()
+    console.log("getGeoJSON => output:", typeof output, "|", output, "#")
+    const parsed = JSON.parse(output)
+    console.log("getGeoJSON => parsed:", typeof parsed, "|", parsed, "#")
+    geojsonRef.value = JSON.stringify(parsed.geojson)
+    console.log("getGeoJSON => geojsonRef.value:", typeof geojsonRef.value, "|", geojsonRef.value, "#")
+
+    durationRef.value = parsed.duration_run
+    numberOfPolygonsRef.value = parsed.n_shapes_geojson
+    numberOfPredictedMasksRef.value = parsed.n_predictions
+    return JSON.parse(parsed.geojson)
+  } catch (errorOtherData) {
+    const statusText = await data.statusText
+    console.error("getGeoJSON => data", data, "#")
+    console.error("getGeoJSON => statusText", statusText, "#")
+    console.error("getGeoJSON => errorOtherData", errorOtherData, "#")
+    responseMessageRef.value = `error: ${statusText}...` || "no response..."
+  }
 };
 
 const getSelectedRectangleCoordinatesBBox = (leafletEvent: L.Map): BboxLatLngTuple => {

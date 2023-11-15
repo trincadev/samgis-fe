@@ -3,6 +3,19 @@ export interface Env {
   API_DOMAIN: string
 }
 
+function parsingResponseBody(bodyParsedResponseCustom: Response|string, status: string, statusCode: string): Response {
+  console.log('parsingResponseBody:: bodyParsedResponseCustom: ### ', typeof bodyParsedResponseCustom, "|", bodyParsedResponseCustom, '#')
+  if (bodyParsedResponseCustom?.statusCode === 200) {
+    const innerBodyReponseParsed = bodyParsedResponseCustom.body
+    console.log('onRequest::innerBodyReponseParsed:', typeof innerBodyReponseParsed, "|", innerBodyReponseParsed, '#')
+    return new Response(JSON.stringify(innerBodyReponseParsed))
+  } else {
+    return new Response(`Error: API statusCode ${statusCode} / ${status} / ${bodyParsedResponseCustom?.statusCode} from API`, {
+      status: Number(statusCode)
+    })
+  }
+}
+
 export const onRequest: PagesFunction<Env> = async (context) => {
   console.log('onRequest::context:', context, '#')
   try {
@@ -36,27 +49,25 @@ export const onRequest: PagesFunction<Env> = async (context) => {
     console.log('onRequest::bodyResponse:', typeof bodyResponse, "|", bodyResponse.length, "|", bodyResponse, '#')
 
     try {
+      console.log('onRequest:: bodyResponse: ### ', typeof bodyResponse, "|", bodyResponse, '#')
       const bodyResponseParsed = JSON.parse(bodyResponse)
       console.log('onRequest:: bodyResponseParsed: ### ', typeof bodyResponseParsed, "|", bodyResponseParsed, '#')
-
-      if (bodyResponseParsed.statusCode === 200) {
-        const innerBodyReponseParsed = bodyResponseParsed.body
-        console.log('onRequest::innerBodyReponseParsed:', typeof innerBodyReponseParsed, "|", innerBodyReponseParsed, '#')
-        return new Response(JSON.stringify(innerBodyReponseParsed))
-      } else {
-        return new Response(`Error: API statusCode ${bodyResponse.statusCode} / ${bodyResponse.status} / ${bodyResponseParsed.statusCode} from API`, {
-          status: bodyResponse.statusCode
+      return parsingResponseBody(bodyResponseParsed, bodyResponse.status, bodyResponse.statusCode)
+    } catch (error_request1) {
+      console.error(`error_response1:${error_request1}.`)
+      try {
+        console.log('onRequest:: error_response1 => parsingResponseBody, bodyResponse ### ', typeof bodyResponse, "|", bodyResponse, '#')
+        return parsingResponseBody(bodyResponse, bodyResponse.status, bodyResponse.statusCode)
+      } catch (error_request2) {
+        console.error(`error_request2:${error_request2}.`)
+        return new Response("Error2 parsing JSON content on API response...", {
+          status: 400
         })
       }
-    } catch (error_request) {
-      console.log(`error_request:${error_request}.`)
-      return new Response("error parsing JSON content on API response...", {
-        status: 400
-      })
     }
   } catch (err) {
     console.error('onRequest::err:', err, '#')
-    return new Response('Error parsing JSON content on API request...', {
+    return new Response('Error0 parsing JSON content on API request...', {
       status: 400
     })
   }
