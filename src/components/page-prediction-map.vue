@@ -2,11 +2,15 @@
   <div class="map-predictions-container">
     <div class="map-predictions" id="map" />
   </div>
-  <p>response message: {{ responseMessageRef }}</p>
-  <p>duration request: {{ durationRef }}</p>
-  <p>number Of Polygons: {{ numberOfPolygonsRef }}</p>
-  <p>number Of predicted masks: {{ numberOfPredictedMasksRef }}</p>
-  <p>geojson: {{ geojsonRef }}</p>
+  <div v-if="responseMessageRef">
+    <p>error message response: {{ responseMessageRef }}</p>
+  </div>
+  <div v-else>
+    <p>duration request: {{ durationRef }}</p>
+    <p>number Of Polygons: {{ numberOfPolygonsRef }}</p>
+    <p>number Of predicted masks: {{ numberOfPredictedMasksRef }}</p>
+    <p>geojson: {{ geojsonRef }}</p>
+  </div>
 </template>
 
 <script setup lang="ts">
