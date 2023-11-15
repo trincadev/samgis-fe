@@ -27,9 +27,6 @@ const getMessage = async () => {
   const { getAccessTokenSilently } = useAuth0();
   const accessToken = await getAccessTokenSilently();
 
-  console.log("# frontend, accessToken:", accessToken, "2#")
-  console.log("# env:", import.meta.env, "2#")
-
   const data = await fetch("/api/ml-samgeo/", {
     method: "POST",
     body: JSON.stringify({
