@@ -3,14 +3,40 @@ export interface Env {
   API_DOMAIN: string
 }
 
-function parsingResponseBody(bodyParsedResponseCustom: Response|string, status: string, statusCode: string): Response {
+interface HtmlStatusMessages {
+  code: number,
+  phrase: string
+}
+
+import {htmlStatusMessages} from '../../src/components/constants'
+
+const getHtmlMessageStatus = (htmlStatusMessagesJSON: HtmlStatusMessages[], status: number) => {
+  const currentHtmlErrorStatus = htmlStatusMessagesJSON.find((el) => el.code == status);
+  return currentHtmlErrorStatus.phrase
+}
+
+function parsingResponseBody(bodyParsedResponseCustom: Response|string): Response {
   console.log('parsingResponseBody:: bodyParsedResponseCustom: ### ', typeof bodyParsedResponseCustom, "|", bodyParsedResponseCustom, '#')
   if (bodyParsedResponseCustom?.statusCode === 200) {
     const innerBodyReponseParsed = bodyParsedResponseCustom.body
     console.log('onRequest::innerBodyReponseParsed:', typeof innerBodyReponseParsed, "|", innerBodyReponseParsed, '#')
     return new Response(JSON.stringify(innerBodyReponseParsed))
   } else {
-    return new Response(`Error: API statusCode ${statusCode} / ${status} / ${bodyParsedResponseCustom?.statusCode} from API`, {
+    console.log('onRequest:: error bodyParsedResponseCustom :', typeof bodyParsedResponseCustom, "|", bodyParsedResponseCustom, '#')
+    let requestId;
+    try {
+      const errorBodyReponseParsed = JSON.parse(bodyParsedResponseCustom.body)
+      console.log('onRequest:: error errorBodyReponseParsed :', typeof errorBodyReponseParsed, "|", errorBodyReponseParsed, '#')
+      requestId = errorBodyReponseParsed.request_id
+      console.log('onRequest:: error requestId :', typeof requestId, "|", requestId, '#')
+    } catch (error_body) {
+      console.log('onRequest:: error_body :', error_body, '#')
+    }
+    const statusCode = bodyParsedResponseCustom?.statusCode
+    console.log('onRequest:: statusCode :', typeof statusCode, "|", statusCode, '#')
+    const errorMessage = getHtmlMessageStatus(htmlStatusMessages, Number(statusCode))
+    console.log('onRequest:: errorMessage :', typeof errorMessage, "|", errorMessage, '#')
+    return new Response(`requestId: ${requestId}, got "${errorMessage}" error message as API response.`, {
       status: Number(statusCode)
     })
   }
@@ -52,22 +78,22 @@ export const onRequest: PagesFunction<Env> = async (context) => {
       console.log('onRequest:: bodyResponse: ### ', typeof bodyResponse, "|", bodyResponse, '#')
       const bodyResponseParsed = JSON.parse(bodyResponse)
       console.log('onRequest:: bodyResponseParsed: ### ', typeof bodyResponseParsed, "|", bodyResponseParsed, '#')
-      return parsingResponseBody(bodyResponseParsed, bodyResponse.status, bodyResponse.statusCode)
+      return parsingResponseBody(bodyResponseParsed)
     } catch (error_request1) {
       console.error(`error_response1:${error_request1}.`)
       try {
         console.log('onRequest:: error_response1 => parsingResponseBody, bodyResponse ### ', typeof bodyResponse, "|", bodyResponse, '#')
-        return parsingResponseBody(bodyResponse, bodyResponse.status, bodyResponse.statusCode)
+        return parsingResponseBody(bodyResponse)
       } catch (error_request2) {
         console.error(`error_request2:${error_request2}.`)
-        return new Response("Error2 parsing JSON content on API response...", {
+        return new Response("Error/2 parsing JSON content on API response...", {
           status: 400
         })
       }
     }
   } catch (err) {
     console.error('onRequest::err:', err, '#')
-    return new Response('Error0 parsing JSON content on API request...', {
+    return new Response('Error/0 parsing JSON content on API request...', {
       status: 400
     })
   }

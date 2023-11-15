@@ -68,18 +68,24 @@ const getGeoJSON = async (requestBody: IBodyLatLngPoints, urlApi: string) => {
     }
   })
   try {
-    const output = await data.json()
-    console.log("getGeoJSON => output:", typeof output, "|", output, "#")
-    const parsed = JSON.parse(output)
-    console.log("getGeoJSON => parsed:", typeof parsed, "|", parsed, "#")
-    geojsonRef.value = JSON.stringify(parsed.geojson)
-    console.log("getGeoJSON => geojsonRef.value:", typeof geojsonRef.value, "|", geojsonRef.value, "#")
+    if (data.status === 200) {
+      const output = await data.json()
+      console.log("getGeoJSON => output:", typeof output, "|", output, "#")
+      const parsed = JSON.parse(output)
+      console.log("getGeoJSON => parsed:", typeof parsed, "|", parsed, "#")
+      geojsonRef.value = JSON.stringify(parsed.geojson)
+      console.log("getGeoJSON => geojsonRef.value:", typeof geojsonRef.value, "|", geojsonRef.value, "#")
 
-    durationRef.value = parsed.duration_run
-    numberOfPolygonsRef.value = parsed.n_shapes_geojson
-    numberOfPredictedMasksRef.value = parsed.n_predictions
-    responseMessageRef.value = ""
-    return JSON.parse(parsed.geojson)
+      durationRef.value = parsed.duration_run
+      numberOfPolygonsRef.value = parsed.n_shapes_geojson
+      numberOfPredictedMasksRef.value = parsed.n_predictions
+      responseMessageRef.value = ""
+      return JSON.parse(parsed.geojson)
+    } else {
+      const outputText = await data.text()
+      console.error("getGeoJSON => status not 200, outputText", outputText, "#")
+      responseMessageRef.value = `error message response: ${outputText}...`
+    }
   } catch (errorOtherData) {
     const statusText = data.statusText || "no response or uncaught exception!"
     console.error("getGeoJSON => data", data, "#")
