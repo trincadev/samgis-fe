@@ -3,7 +3,7 @@
     <div class="map-predictions" id="map" />
   </div>
   <div v-if="responseMessageRef">
-    <p>error message response: {{ responseMessageRef }}</p>
+    <p>{{ responseMessageRef }}</p>
   </div>
   <div v-else>
     <p>duration request: {{ durationRef }}</p>
@@ -28,6 +28,7 @@ const geojsonRef = ref("geojsonOutput-placeholder")
 const durationRef = ref(0)
 const numberOfPolygonsRef = ref(0)
 const numberOfPredictedMasksRef = ref(0)
+const waitingString = "waiting..."
 const responseMessageRef = ref("")
 let map: L.map;
 
@@ -57,6 +58,7 @@ interface IBodyLatLngPoints {
 }
 
 const getGeoJSON = async (requestBody: IBodyLatLngPoints, urlApi: string) => {
+  responseMessageRef.value = waitingString
   const data = await fetch(urlApi, {
     method: "POST",
     body: JSON.stringify(requestBody),
@@ -82,7 +84,7 @@ const getGeoJSON = async (requestBody: IBodyLatLngPoints, urlApi: string) => {
     console.error("getGeoJSON => data", data, "#")
     console.error("getGeoJSON => statusText", statusText, "#")
     console.error("getGeoJSON => errorOtherData", errorOtherData, "#")
-    responseMessageRef.value = `error: ${statusText}...` || "no response..."
+    responseMessageRef.value = `error message response: ${statusText}...` || "no response or uncaught exception!"
   }
 };
 
@@ -101,6 +103,7 @@ const getExtentCurrentViewMapBBox = (leafletMap: L.Map): BboxLatLngTuple => {
 }
 
 const getPopupContentPoint = (leafletMap: L.Map, leafletEvent: L.Evented) => {
+  responseMessageRef.value = ""
   const bbox = getExtentCurrentViewMapBBox(leafletMap)
   let popupContent: HTMLDivElement = document.createElement("div");
   console.log("getPopupContentPoint => mapBBox:", typeof bbox, "|", bbox, "#") // leafletEvent, leafletMap
