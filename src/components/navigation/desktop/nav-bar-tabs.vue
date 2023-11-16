@@ -1,9 +1,8 @@
 <template>
   <div class="nav-bar__tabs">
     <template v-if="isAuthenticated">
-      <NavBarTab path="/profile" label="Profile" />
-      <NavBarTab path="/protected" label="Protected" />
       <NavBarTab path="/prediction-map" label="Prediction Map" />
+      <NavBarTab path="/profile" label="Profile" />
     </template>
   </div>
 </template>

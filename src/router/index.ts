@@ -5,7 +5,6 @@ import { createRouter, createWebHistory } from "vue-router";
 
 const NotFound = () => import("@/views/NotFound.vue");
 const Profile = () => import("@/views/Profile.vue");
-const Protected = () => import("@/views/Protected.vue");
 const PredictionMap = () => import("@/views/PredictionMap.vue");
 
 const routes = [
@@ -15,21 +14,15 @@ const routes = [
     component: Home,
   },
   {
-    path: "/profile",
-    name: "profile",
-    component: Profile,
-    beforeEnter: authGuard,
-  },
-  {
-    path: "/protected",
-    name: "protected",
-    component: Protected,
-    beforeEnter: authGuard,
-  },
-  {
     path: "/prediction-map",
     name: "map with machine learning",
     component: PredictionMap,
+    beforeEnter: authGuard,
+  },
+  {
+    path: "/profile",
+    name: "profile",
+    component: Profile,
     beforeEnter: authGuard,
   },
   {

@@ -70,11 +70,8 @@ const getGeoJSON = async (requestBody: IBodyLatLngPoints, urlApi: string) => {
   try {
     if (data.status === 200) {
       const output = await data.json()
-      console.log("getGeoJSON => output:", typeof output, "|", output, "#")
       const parsed = JSON.parse(output)
-      console.log("getGeoJSON => parsed:", typeof parsed, "|", parsed, "#")
       geojsonRef.value = JSON.stringify(parsed.geojson)
-      console.log("getGeoJSON => geojsonRef.value:", typeof geojsonRef.value, "|", geojsonRef.value, "#")
 
       durationRef.value = parsed.duration_run
       numberOfPolygonsRef.value = parsed.n_shapes_geojson
@@ -88,9 +85,7 @@ const getGeoJSON = async (requestBody: IBodyLatLngPoints, urlApi: string) => {
     }
   } catch (errorOtherData) {
     const statusText = data.statusText || "no response or uncaught exception!"
-    console.error("getGeoJSON => data", data, "#")
-    console.error("getGeoJSON => statusText", statusText, "#")
-    console.error("getGeoJSON => errorOtherData", errorOtherData, "#")
+    console.error("getGeoJSON => data", data, "statusText", statusText, "errorOtherData", errorOtherData, "#")
     responseMessageRef.value = `error message response: ${statusText}...`
   }
 };
@@ -113,10 +108,8 @@ const getPopupContentPoint = (leafletMap: L.Map, leafletEvent: L.Evented) => {
   responseMessageRef.value = ""
   const bbox = getExtentCurrentViewMapBBox(leafletMap)
   let popupContent: HTMLDivElement = document.createElement("div");
-  console.log("getPopupContentPoint => mapBBox:", typeof bbox, "|", bbox, "#") // leafletEvent, leafletMap
   const currentZoom = leafletMap.getZoom()
   let currentPointLayer: LatLngTuple = getSelectedPointCoordinate(leafletEvent)
-  console.log("currentPointLayer:", currentPointLayer, "#")
 
   popupContent.innerHTML = `<p>${leafletEvent.shape}:</p>`
   popupContent.innerHTML += `<p>lat:${JSON.stringify(currentPointLayer.lat)}</p>`
@@ -129,7 +122,7 @@ const getPopupContentPoint = (leafletMap: L.Map, leafletEvent: L.Evented) => {
   a.className = "leaflet-popup-span-title"
   a.onclick = async function eventClick(event: Event) {
     event.preventDefault()
-    console.log(`getPopupContentPoint => popup-click:${leafletEvent.layer._leaflet_id}.`)
+    console.log(`getPopupContentPoint => popup-click:${leafletEvent.layer._leaflet_id},currentPointLayer:${currentPointLayer}.`)
     const bodyLatLngPoints: IBodyLatLngPoints = {
       bbox: bbox,
       prompt: [{
@@ -140,9 +133,7 @@ const getPopupContentPoint = (leafletMap: L.Map, leafletEvent: L.Evented) => {
       zoom: currentZoom,
       source_type: "Satellite"
     }
-    console.log("getPopupContentPoint => bodyLatLngPoints:", JSON.stringify(bodyLatLngPoints), "#")
     const geojsonOutputOnMounted = await getGeoJSON(bodyLatLngPoints, "/api/ml-fastsam/")
-    console.log("getPopupContentPoint => geojsonOutputOnMounted:", geojsonOutputOnMounted, "#")
     const featureNew = L.geoJSON(geojsonOutputOnMounted);
     leafletMap.addLayer(featureNew);
   }
