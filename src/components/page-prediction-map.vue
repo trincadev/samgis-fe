@@ -196,6 +196,8 @@ onMounted(async () => {
   width: 1024px;
   height: 684px;
   display: block;
+  position: relative;
+  z-index: 1;
 }
 
 .leaflet-popup-content-inner {
