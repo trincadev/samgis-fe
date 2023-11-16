@@ -1,5 +1,6 @@
 export const maxZoom: number = 20
 export const minZoom: number = 3
+// modified from https://github.com/for-GET/know-your-http-well/blob/master/json/status-codes.json
 export const htmlStatusMessages = [
   {
     code: 100,
