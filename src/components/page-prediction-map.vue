@@ -18,18 +18,12 @@ import L, { LatLngTuple } from "leaflet";
 import "@geoman-io/leaflet-geoman-free";
 import "leaflet/dist/leaflet.css";
 import "@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css";
-import { onMounted, ref } from "vue";
+import { onMounted } from "vue";
 
-import { maxZoom, minZoom } from "../components/constants";
+import { maxZoom, minZoom, geojsonRef, responseMessageRef, durationRef, numberOfPolygonsRef, numberOfPredictedMasksRef, attribution, prefix } from "./constants";
+import { getSelectedPointCoordinate, getExtentCurrentViewMapBBox, setGeomanControls, getGeoJSON } from "./helpers";
+import type { IBodyLatLngPoints } from "./types";
 
-const attribution: string = "&copy; <a target=\"_blank\" href=\"https://osm.org/copyright\">OpenStreetMap</a> contributors "
-const prefix: string = " &copy; <a target=\"_blank\" href=\"https://leafletjs.com\">leaflet</a>"
-const geojsonRef = ref("geojsonOutput-placeholder")
-const durationRef = ref(0)
-const numberOfPolygonsRef = ref(0)
-const numberOfPredictedMasksRef = ref(0)
-const waitingString = "waiting..."
-const responseMessageRef = ref("")
 let map: L.map;
 
 const props = defineProps<{
@@ -38,71 +32,6 @@ const props = defineProps<{
   mapName: string,
   zoom: string
 }>()
-
-interface BboxLatLngTuple {
-  ne: LatLngTuple,
-  sw: LatLngTuple
-}
-
-interface IPrompt {
-  type: string,
-  data: BboxLatLngTuple,
-  label?: number
-}
-
-interface IBodyLatLngPoints {
-  bbox: BboxLatLngTuple,
-  prompt: Array<IPrompt>,
-  zoom: number,
-  source_type: string
-}
-
-const getGeoJSON = async (requestBody: IBodyLatLngPoints, urlApi: string) => {
-  responseMessageRef.value = waitingString
-  const data = await fetch(urlApi, {
-    method: "POST",
-    body: JSON.stringify(requestBody),
-    headers: {
-      "Authorization": `Bearer ${props.accessToken}`,
-      "Content-type": "application/json"
-    }
-  })
-  try {
-    if (data.status === 200) {
-      const output = await data.json()
-      const parsed = JSON.parse(output)
-      geojsonRef.value = JSON.stringify(parsed.geojson)
-
-      durationRef.value = parsed.duration_run
-      numberOfPolygonsRef.value = parsed.n_shapes_geojson
-      numberOfPredictedMasksRef.value = parsed.n_predictions
-      responseMessageRef.value = ""
-      return JSON.parse(parsed.geojson)
-    } else {
-      const outputText = await data.text()
-      console.error("getGeoJSON => status not 200, outputText", outputText, "#")
-      responseMessageRef.value = `error message response: ${outputText}...`
-    }
-  } catch (errorOtherData) {
-    const statusText = data.statusText || "no response or uncaught exception!"
-    console.error("getGeoJSON => data", data, "statusText", statusText, "errorOtherData", errorOtherData, "#")
-    responseMessageRef.value = `error message response: ${statusText}...`
-  }
-};
-
-const getSelectedRectangleCoordinatesBBox = (leafletEvent: L.Map): BboxLatLngTuple => {
-  const { _northEast: ne, _southWest: sw } = leafletEvent.layer._bounds
-  const bbox: BboxLatLngTuple = { ne, sw }
-  return bbox
-}
-const getSelectedPointCoordinate = (leafletEvent: L.Evented): LatLngTuple => {
-  return leafletEvent.layer._latlng
-}
-
-const getExtentCurrentViewMapBBox = (leafletMap: L.Map): BboxLatLngTuple => {
-  const boundaries = leafletMap.getBounds()
-  return { ne: boundaries.getNorthEast(), sw: boundaries.getSouthWest() }
-}
 
 const getPopupContentPoint = (leafletMap: L.Map, leafletEvent: L.Evented) => {
   responseMessageRef.value = ""
@@ -133,7 +62,7 @@ const getPopupContentPoint = (leafletMap: L.Map, leafletEvent: L.Evented) => {
       zoom: currentZoom,
       source_type: "Satellite"
     }
-    const geojsonOutputOnMounted = await getGeoJSON(bodyLatLngPoints, "/api/ml-fastsam/")
+    const geojsonOutputOnMounted = await getGeoJSON(bodyLatLngPoints, "/api/ml-fastsam/", props.accessToken)
     const featureNew = L.geoJSON(geojsonOutputOnMounted);
     leafletMap.addLayer(featureNew);
   }
@@ -157,36 +86,7 @@ onMounted(async () => {
     attribution: attribution
   }).addTo(map);
 
-  // leaflet geoman toolbar
-  map.pm.addControls({
-    position: 'topleft',
-    drawCircleMarker: false,
-    rotateMode: false,
-  });
-
-  const _actions = [
-    {
-      text: 'Custom message, with click event',
-      onClick(actionEvent: L.Evented) {
-        console.log("actionEvent:", typeof actionEvent, "|", actionEvent, "")
-      },
-      name: 'actionName',
-    },
-  ];
-  map.pm.Toolbar.copyDrawControl('Marker', {
-    name: 'MarkerWithPopup',
-    block: 'custom',
-    title: 'Marker - Display text on hover button',
-    actions: _actions,
-  });
-
-  map.on('pm:create', (e: L.Evented) => {
-    if (e.shape === 'MarkerWithPopup') {
-      console.log("popup MarkerWithPopup")
-      const div = getPopupContentPoint(map, e)
-      e.layer.bindPopup(div).openPopup();
-    }
-  });
+  setGeomanControls(map, getPopupContentPoint)
 });
 </script>
 

@@ -1,5 +1,15 @@
+import { ref } from "vue"
+
 export const maxZoom: number = 20
 export const minZoom: number = 3
+export const waitingString = "waiting..."
+export const attribution: string = "&copy; <a target=\"_blank\" href=\"https://osm.org/copyright\">OpenStreetMap</a> contributors "
+export const prefix: string = " &copy; <a target=\"_blank\" href=\"https://leafletjs.com\">leaflet</a>"
+export const durationRef = ref(0)
+export const numberOfPolygonsRef = ref(0)
+export const numberOfPredictedMasksRef = ref(0)
+export const responseMessageRef = ref("")
+export const geojsonRef = ref("geojsonOutput-placeholder")
 // modified from https://github.com/for-GET/know-your-http-well/blob/master/json/status-codes.json
 export const htmlStatusMessages = [
   {
