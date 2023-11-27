@@ -79,6 +79,6 @@ export const getGeoJSON = async (requestBody: IBodyLatLngPoints, urlApi: string,
   } catch (errorOtherData) {
     const statusText = data.statusText || "no response or uncaught exception!"
     console.error("getGeoJSON => data", data, "statusText", statusText, "errorOtherData", errorOtherData, "#")
-    responseMessageRef.value = `error message response: ${statusText}...`
+    responseMessageRef.value = `error status response: ${statusText}...`
   }
 };
