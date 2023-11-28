@@ -1,5 +1,7 @@
 <template>
   <div class="nav-bar__tabs">
+      <NavBarTab path="/blog" label="My blog and website" />
+      <NavBarTab path="/docs" label="SamGIS Documentation" />
     <template v-if="isAuthenticated">
       <NavBarTab path="/prediction-map" label="Prediction Map" />
       <NavBarTab path="/profile" label="Profile" />

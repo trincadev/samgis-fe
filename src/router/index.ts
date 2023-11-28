@@ -14,6 +14,20 @@ const routes = [
     component: Home,
   },
   {
+    path: "/blog",
+    name: "my blog and website",
+    beforeEnter: () => {
+      window.location.href = `${import.meta.env.VITE_BLOG}`
+    },
+  },
+  {
+    path: "/docs",
+    name: "SamGIS docs",
+    beforeEnter: () => {
+      window.location.href = `${import.meta.env.VITE_DOCS_SAMGIS_DOMAIN}`
+    },
+  },
+  {
     path: "/prediction-map",
     name: "map with machine learning",
     component: PredictionMap,
