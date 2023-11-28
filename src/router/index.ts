@@ -17,7 +17,7 @@ const routes = [
     path: "/blog",
     name: "my blog and website",
     beforeEnter: () => {
-      window.location.href = `${import.meta.env.VITE_BLOG}`
+      window.location.href = `${import.meta.env.VITE_BLOG_DOMAIN}`
     },
   },
   {
