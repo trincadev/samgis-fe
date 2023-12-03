@@ -77,15 +77,30 @@ const getPopupContentPoint = (leafletMap: L.Map, leafletEvent: L.Evented) => {
 }
 
 onMounted(async () => {
-  map = L.map("map").setView(props.center, props.zoom);
-  map.attributionControl.setPrefix(prefix)
-  L.control.scale({ position: "topright", imperial: false, metric: true }).addTo(map);
-  L.tileLayer("https://{s}.tile.osm.org/{z}/{x}/{y}.png", {
+  const osm = L.tileLayer("https://{s}.tile.osm.org/{z}/{x}/{y}.png", {
     minZoom: Number(minZoom),
     maxZoom: Number(maxZoom),
     attribution: attribution
-  }).addTo(map);
+  });
+  const osmHOT = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+    minZoom: Number(minZoom),
+    maxZoom: Number(maxZoom),
+    attribution: '© OpenStreetMap contributors, Tiles style by Humanitarian OpenStreetMap Team hosted by OpenStreetMap France'
+  });
+  const baseMaps = {
+    "OpenStreetMap": osm,
+    "<span style='color: red'>OpenStreetMap.HOT</span>": osmHOT
+  };
 
+  const map = L.map('map', {
+    center: props.center,
+    zoom: props.zoom,
+    layers: [osm]
+  });
+  map.attributionControl.setPrefix(prefix)
+  L.control.scale({ position: "bottomleft", imperial: false, metric: true }).addTo(map);
+
+  L.control.layers(baseMaps).addTo(map);
   setGeomanControls(map, getPopupContentPoint)
 });
 </script>
