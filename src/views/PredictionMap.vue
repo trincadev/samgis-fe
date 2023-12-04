@@ -8,8 +8,8 @@
                 </p>
 
                 <div id="map-container-md">
-                    <!-- {"lat":46.19575,"lng":9.440860}, zoom:12 -->
-                    <PredictionMap :center='[-30.0838046, 110.2949403]' :mapName="mapName" zoom=4 :accessToken="accessToken"/>
+                    <!-- {"lat":46.221324377125434,"lng":9.319281622674922}, zoom:12-->
+                    <PredictionMap :center='[46.221324377125434, 9.319281622674922]' :mapName="mapName" zoom=12 :accessToken="accessToken"/>
                 </div>
             </div>
         </div>

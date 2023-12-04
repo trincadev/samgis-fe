@@ -1,7 +1,10 @@
 <template>
   <div class="map-predictions-container">
     <div class="map-predictions" id="map" />
+    <p>current zoom: {{ currentZoomRef }}</p>
+    <p>current map bbox: {{ currentMapBBoxRef }}</p>
   </div>
+  <br />
   <div v-if="responseMessageRef">
     <p>{{ responseMessageRef }}</p>
   </div>
@@ -18,12 +21,14 @@ import L, { LatLngTuple } from "leaflet";
 import "@geoman-io/leaflet-geoman-free";
 import "leaflet/dist/leaflet.css";
 import "@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css";
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 
 import { maxZoom, minZoom, geojsonRef, responseMessageRef, durationRef, numberOfPolygonsRef, numberOfPredictedMasksRef, attribution, prefix } from "./constants";
 import { getSelectedPointCoordinate, getExtentCurrentViewMapBBox, setGeomanControls, getGeoJSON } from "./helpers";
 import type { IBodyLatLngPoints } from "./types";
 
+const currentMapBBoxRef = ref()
+const currentZoomRef = ref()
 let map: L.map;
 
 const props = defineProps<{
@@ -57,7 +62,7 @@ const getPopupContentPoint = (leafletMap: L.Map, leafletEvent: L.Evented) => {
       prompt: [{
         "type": "point",
         "data": currentPointLayer,
-        "label": 0
+        "label": 1
       }],
       zoom: currentZoom,
       source_type: "Satellite"
@@ -76,6 +81,11 @@ const getPopupContentPoint = (leafletMap: L.Map, leafletEvent: L.Evented) => {
   return popupDiv
 }
 
+const updateZoomBboxMap = (localMap: L.map) => {
+    currentZoomRef.value = localMap.getZoom()
+    currentMapBBoxRef.value = getExtentCurrentViewMapBBox(localMap)
+}
+
 onMounted(async () => {
   const osm = L.tileLayer("https://{s}.tile.osm.org/{z}/{x}/{y}.png", {
     minZoom: Number(minZoom),
@@ -92,7 +102,7 @@ onMounted(async () => {
     "<span style='color: red'>OpenStreetMap.HOT</span>": osmHOT
   };
 
-  const map = L.map('map', {
+  map = L.map('map', {
     center: props.center,
     zoom: props.zoom,
     layers: [osm]
@@ -102,6 +112,15 @@ onMounted(async () => {
 
   L.control.layers(baseMaps).addTo(map);
   setGeomanControls(map, getPopupContentPoint)
+  updateZoomBboxMap(map)
+
+  map.on("zoomend", function (e: Event) {
+    updateZoomBboxMap(map)
+  });
+
+  map.on("mousedown", function (e: Event) {
+    currentMapBBoxRef.value = getExtentCurrentViewMapBBox(map)
+  });
 });
 </script>
 
