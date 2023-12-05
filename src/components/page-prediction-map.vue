@@ -26,13 +26,13 @@ import "@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css";
 import { onMounted, ref, type Ref } from "vue";
 
 import { maxZoom, minZoom, geojsonRef, responseMessageRef, durationRef, numberOfPolygonsRef, numberOfPredictedMasksRef, attribution, prefix } from "./constants";
-import { getSelectedPointCoordinate, getExtentCurrentViewMapBBox, setGeomanControls, getGeoJSON, getPointPromptElement, getSelectedRectangleCoordinatesBBox } from "./helpers";
+import { getSelectedPointCoordinate, getExtentCurrentViewMapBBox, setGeomanControls, getGeoJSON, updateMapData } from "./helpers";
 import type { IBodyLatLngPoints, IPointPrompt, IRectanglePrompt } from "./types";
 
 
 const currentMapBBoxRef = ref()
 const currentZoomRef = ref()
-const promptsArrayRef: Array<IPointPrompt|IRectanglePrompt> = ref([])
+const promptsArrayRef: Ref<Array<IPointPrompt|IRectanglePrompt>> = ref([])
 let map: L.map;
 
 const props = defineProps<{
@@ -70,10 +70,6 @@ const sendMLRequest = async (leafletMap: L.Map, promptRequest: Array<IPointPromp
   const geojsonOutputOnMounted = await getGeoJSON(bodyRequest, "/api/ml-fastsam/", props.accessToken)
   const featureNew = L.geoJSON(geojsonOutputOnMounted);
   leafletMap.addLayer(featureNew);
-}
-
-const resetRef = () => {
-  promptsArrayRef.value = []
 }
 
 const updateZoomBboxMap = (localMap: L.map) => {
@@ -117,37 +113,7 @@ onMounted(async () => {
     currentMapBBoxRef.value = getExtentCurrentViewMapBBox(map)
   });
 
-  map.on('pm:create', (e: L.Evented) => {
-      if (e.shape === 'IncludeMarkerPrompt') {
-        console.log("pm:create, IncludeMarkerPrompt: ", e)
-        const div = getPopupContentPoint(e, 1)
-        e.layer.bindPopup(div).openPopup();
-        promptsArrayRef.value.push(getPointPromptElement(e, 1))
-      }
-      if (e.shape === 'ExcludeMarkerPrompt') {
-        console.log("pm:create, ExcludeMarkerPrompt: ", e)
-        const div = getPopupContentPoint(e, 0)
-        e.layer.bindPopup(div).openPopup();
-        promptsArrayRef.value.push(getPointPromptElement(e, 0))
-      }
-      if (e.shape === 'RectanglePrompt') {
-        console.log("pm:create RectanglePrompt: ", e)
-        e.layer.bindPopup(`id:${e.layer._leaflet_id}.`).openPopup()
-        promptsArrayRef.value.push({
-          id: e.layer._leaflet_id,
-          type: "rectangle",
-          data: getSelectedRectangleCoordinatesBBox(e)
-        })
-      }
-    });
-    map.on('pm:remove', (e: L.Evented) => {
-      if (e.type == "pm:remove" ) {
-        promptsArrayRef.value = promptsArrayRef.value.filter(el => {
-          return el.id != e.layer._leaflet_id
-        })
-        console.log("pm:removed e:", e)
-      }
-    })
+  updateMapData(map, getPopupContentPoint, promptsArrayRef)
 });
 </script>
 

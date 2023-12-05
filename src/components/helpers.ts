@@ -1,6 +1,7 @@
 import { Evented, LatLngTuple, Map } from "leaflet";
 import { responseMessageRef, waitingString, durationRef, numberOfPolygonsRef, numberOfPredictedMasksRef, geojsonRef } from "./constants";
 import type { BboxLatLngTuple, ExcludeIncludeLabelPrompt, IBodyLatLngPoints } from "./types";
+import type { Ref } from "vue";
 
 
 export function setGeomanControls(localMap: Map, getPopupContentPoint: Function) {
@@ -102,4 +103,39 @@ export const getRectanglePromptElement = (e: Evented) => {
     type: "rectangle",
     data: getSelectedRectangleCoordinatesBBox(e)
   }
+}
+
+export const updateMapData = (localMap: Map, getPopupContentPointFn: Function, promptsArrayRef: Ref) => {
+
+  localMap.on('pm:create', (e: Evented) => {
+    if (e.shape === 'IncludeMarkerPrompt') {
+      console.log("pm:create, IncludeMarkerPrompt: ", e)
+      const div = getPopupContentPointFn(e, 1)
+      e.layer.bindPopup(div).openPopup();
+      promptsArrayRef.value.push(getPointPromptElement(e, 1))
+    }
+    if (e.shape === 'ExcludeMarkerPrompt') {
+      console.log("pm:create, ExcludeMarkerPrompt: ", e)
+      const div = getPopupContentPointFn(e, 0)
+      e.layer.bindPopup(div).openPopup();
+      promptsArrayRef.value.push(getPointPromptElement(e, 0))
+    }
+    if (e.shape === 'RectanglePrompt') {
+      console.log("pm:create RectanglePrompt: ", e)
+      e.layer.bindPopup(`id:${e.layer._leaflet_id}.`).openPopup()
+      promptsArrayRef.value.push({
+        id: e.layer._leaflet_id,
+        type: "rectangle",
+        data: getSelectedRectangleCoordinatesBBox(e)
+      })
+    }
+  });
+  localMap.on('pm:remove', (e: Evented) => {
+    if (e.type == "pm:remove" ) {
+      promptsArrayRef.value = promptsArrayRef.value.filter((el: Evented) => {
+        return el.id != e.layer._leaflet_id
+      })
+      console.log("pm:removed e:", e)
+    }
+  })
 }
