@@ -1,8 +1,10 @@
 <template>
   <div class="map-predictions-container">
     <div class="map-predictions" id="map" />
+    <button @click="sendMLRequest(map, promptsArrayRef)">send ML request</button>
     <p>current zoom: {{ currentZoomRef }}</p>
     <p>current map bbox: {{ currentMapBBoxRef }}</p>
+    <p>prompts array: {{ promptsArrayRef }}</p>
   </div>
   <br />
   <div v-if="responseMessageRef">
@@ -21,14 +23,16 @@ import L, { LatLngTuple } from "leaflet";
 import "@geoman-io/leaflet-geoman-free";
 import "leaflet/dist/leaflet.css";
 import "@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, type Ref } from "vue";
 
 import { maxZoom, minZoom, geojsonRef, responseMessageRef, durationRef, numberOfPolygonsRef, numberOfPredictedMasksRef, attribution, prefix } from "./constants";
-import { getSelectedPointCoordinate, getExtentCurrentViewMapBBox, setGeomanControls, getGeoJSON } from "./helpers";
-import type { IBodyLatLngPoints } from "./types";
+import { getSelectedPointCoordinate, getExtentCurrentViewMapBBox, setGeomanControls, getGeoJSON, getPointPromptElement, getSelectedRectangleCoordinatesBBox } from "./helpers";
+import type { IBodyLatLngPoints, IPointPrompt, IRectanglePrompt } from "./types";
+
 
 const currentMapBBoxRef = ref()
 const currentZoomRef = ref()
+const promptsArrayRef: Array<IPointPrompt|IRectanglePrompt> = ref([])
 let map: L.map;
 
 const props = defineProps<{
@@ -38,47 +42,39 @@ const props = defineProps<{
   zoom: string
 }>()
 
-const getPopupContentPoint = (leafletMap: L.Map, leafletEvent: L.Evented) => {
+const getPopupContentPoint = (leafletMap: L.Map, leafletEvent: L.Evented, label: number) => {
   responseMessageRef.value = ""
-  const bbox = getExtentCurrentViewMapBBox(leafletMap)
   let popupContent: HTMLDivElement = document.createElement("div");
-  const currentZoom = leafletMap.getZoom()
   let currentPointLayer: LatLngTuple = getSelectedPointCoordinate(leafletEvent)
 
-  popupContent.innerHTML = `<p>${leafletEvent.shape}:</p>`
-  popupContent.innerHTML += `<p>lat:${JSON.stringify(currentPointLayer.lat)}</p>`
+  popupContent.innerHTML = `<p>lat:${JSON.stringify(currentPointLayer.lat)}</p>`
   popupContent.innerHTML += `<p>lng:${JSON.stringify(currentPointLayer.lng)}</p>`
-  popupContent.innerHTML += `<p>zoom:${currentZoom}</p>`
-
-  const a: HTMLAnchorElement = document.createElement("a");
-
-  a.id = `popup-a-${leafletEvent.layer._leaflet_id}`
-  a.className = "leaflet-popup-span-title"
-  a.onclick = async function eventClick(event: Event) {
-    event.preventDefault()
-    console.log(`getPopupContentPoint => popup-click:${leafletEvent.layer._leaflet_id},currentPointLayer:${currentPointLayer}.`)
-    const bodyLatLngPoints: IBodyLatLngPoints = {
-      bbox: bbox,
-      prompt: [{
-        "type": "point",
-        "data": currentPointLayer,
-        "label": 1
-      }],
-      zoom: currentZoom,
-      source_type: "Satellite"
-    }
-    const geojsonOutputOnMounted = await getGeoJSON(bodyLatLngPoints, "/api/ml-fastsam/", props.accessToken)
-    const featureNew = L.geoJSON(geojsonOutputOnMounted);
-    leafletMap.addLayer(featureNew);
-  }
-  a.innerHTML = "fire prediction"
+  popupContent.innerHTML += `<p>label:${label}</p>`
+  popupContent.innerHTML += `<p>id:${leafletEvent.layer._leaflet_id}</p>`
 
   const popupDiv: HTMLDivElement = document.createElement("div");
   popupDiv.className = "leaflet-popup-content-inner"
   popupDiv.appendChild(popupContent)
-  popupDiv.appendChild(a)
 
   return popupDiv
+}
+
+const sendMLRequest = async (leafletMap: L.Map, promptRequest: Array<IPointPrompt|IRectanglePrompt>) => {
+  console.log("sendMLRequest:: promptRequest: ", promptRequest)
+  const bodyRequest: IBodyLatLngPoints = {
+    bbox: getExtentCurrentViewMapBBox(leafletMap),
+    prompt: promptRequest,
+    zoom: leafletMap.getZoom(),
+    source_type: "Satellite"
+  }
+  console.log("sendMLRequest:: bodyRequest: ", bodyRequest)
+  const geojsonOutputOnMounted = await getGeoJSON(bodyRequest, "/api/ml-fastsam/", props.accessToken)
+  const featureNew = L.geoJSON(geojsonOutputOnMounted);
+  leafletMap.addLayer(featureNew);
+}
+
+const resetRef = () => {
+  promptsArrayRef.value = []
 }
 
 const updateZoomBboxMap = (localMap: L.map) => {
@@ -121,6 +117,38 @@ onMounted(async () => {
   map.on("mousedown", function (e: Event) {
     currentMapBBoxRef.value = getExtentCurrentViewMapBBox(map)
   });
+
+  map.on('pm:create', (e: L.Evented) => {
+      if (e.shape === 'IncludeMarkerPrompt') {
+        console.log("pm:create, IncludeMarkerPrompt: ", e)
+        const div = getPopupContentPoint(map, e, 1)
+        e.layer.bindPopup(div).openPopup();
+        promptsArrayRef.value.push(getPointPromptElement(e, 1))
+      }
+      if (e.shape === 'ExcludeMarkerPrompt') {
+        console.log("pm:create, ExcludeMarkerPrompt: ", e)
+        const div = getPopupContentPoint(map, e, 0)
+        e.layer.bindPopup(div).openPopup();
+        promptsArrayRef.value.push(getPointPromptElement(e, 0))
+      }
+      if (e.shape === 'RectanglePrompt') {
+        console.log("pm:create RectanglePrompt: ", e)
+        e.layer.bindPopup(`id:${e.layer._leaflet_id}.`).openPopup()
+        promptsArrayRef.value.push({
+          id: e.layer._leaflet_id,
+          type: "rectangle",
+          data: getSelectedRectangleCoordinatesBBox(e)
+        })
+      }
+    });
+    map.on('pm:remove', (e: L.Evented) => {
+      if (e.type == "pm:remove" ) {
+        promptsArrayRef.value = promptsArrayRef.value.filter(el => {
+          return el.id != e.layer._leaflet_id
+        })
+        console.log("pm:remove e:", e)
+      }
+    })
 });
 </script>
 

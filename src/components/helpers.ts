@@ -1,6 +1,6 @@
 import { Evented, LatLngTuple, Map } from "leaflet";
 import { responseMessageRef, waitingString, durationRef, numberOfPolygonsRef, numberOfPredictedMasksRef, geojsonRef } from "./constants";
-import type { BboxLatLngTuple, IBodyLatLngPoints } from "./types";
+import type { BboxLatLngTuple, ExcludeIncludeLabelPrompt, IBodyLatLngPoints } from "./types";
 
 
 export function setGeomanControls(localMap: Map, getPopupContentPoint: Function) {
@@ -21,25 +21,28 @@ export function setGeomanControls(localMap: Map, getPopupContentPoint: Function)
       },
     ];
     localMap.pm.Toolbar.copyDrawControl('Marker', {
-      name: 'MarkerWithPopup',
+      name: 'IncludeMarkerPrompt',
       block: 'custom',
-      title: 'Marker - Display text on hover button',
+      title: 'Marker that add recognition regions from SAM prompt requests',
       actions: _actions,
     });
-  
-    localMap.on('pm:create', (e: Evented) => {
-      if (e.shape === 'MarkerWithPopup') {
-        console.log("popup MarkerWithPopup")
-        const div = getPopupContentPoint(localMap, e)
-        e.layer.bindPopup(div).openPopup();
-      }
+    localMap.pm.Toolbar.copyDrawControl('Marker', {
+      name: 'ExcludeMarkerPrompt',
+      block: 'custom',
+      title: 'Marker that remove recognition regions from SAM prompt requests',
+      actions: _actions,
+    });
+    localMap.pm.Toolbar.copyDrawControl('Rectangle', {
+      name: 'RectanglePrompt',
+      block: 'custom',
+      title: 'Rectangular recognition regions for SAM prompt requests',
+      actions: _actions,
     });
 }
 
 export const getSelectedRectangleCoordinatesBBox = (leafletEvent: Map): BboxLatLngTuple => {
   const { _northEast: ne, _southWest: sw } = leafletEvent.layer._bounds
-  const bbox: BboxLatLngTuple = { ne, sw }
-  return bbox
+  return { ne, sw }
 }
 export const getSelectedPointCoordinate = (leafletEvent: Evented): LatLngTuple => {
   return leafletEvent.layer._latlng
@@ -82,3 +85,21 @@ export const getGeoJSON = async (requestBody: IBodyLatLngPoints, urlApi: string,
     responseMessageRef.value = `error status response: ${statusText}...`
   }
 };
+
+export const getPointPromptElement = (e: Evented, elementType: ExcludeIncludeLabelPrompt) => {
+  let currentPointLayer: LatLngTuple = getSelectedPointCoordinate(e)
+  return {
+    id: e.layer._leaflet_id,
+    type: "point",
+    data: currentPointLayer,
+    label: elementType
+  }
+}
+
+export const getRectanglePromptElement = (e: Evented) => {
+  return {
+    id: e.layer._leaflet_id,
+    type: "rectangle",
+    data: getSelectedRectangleCoordinatesBBox(e)
+  }
+}

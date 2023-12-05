@@ -4,16 +4,31 @@ export interface BboxLatLngTuple {
     ne: LatLngTuple,
     sw: LatLngTuple
 }
-  
-export interface IPrompt {
-    type: string,
+
+enum ExcludeIncludeLabelPrompt {
+    EXCLUDE = 0,
+    INCLUDE = 1
+}
+type PointPromptType = "point"
+type RectanglePromptType = "rectangle"
+
+export interface IPointPrompt {
+    type: PointPromptType,
     data: BboxLatLngTuple,
-    label?: number
+    label: ExcludeIncludeLabelPrompt
+}
+
+export interface IRectanglePrompt {
+    type: RectanglePromptType,
+    data: {
+        ne: BboxLatLngTuple,
+        sw: BboxLatLngTuple
+    }
 }
   
 export interface IBodyLatLngPoints {
     bbox: BboxLatLngTuple,
-    prompt: Array<IPrompt>,
+    prompt: Array<IPointPrompt|IRectanglePrompt>,
     zoom: number,
     source_type: string
 }
