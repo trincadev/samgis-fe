@@ -42,15 +42,14 @@ const props = defineProps<{
   zoom: string
 }>()
 
-const getPopupContentPoint = (leafletMap: L.Map, leafletEvent: L.Evented, label: number) => {
+const getPopupContentPoint = (leafletEvent: L.Evented, label: number) => {
   responseMessageRef.value = ""
   let popupContent: HTMLDivElement = document.createElement("div");
   let currentPointLayer: LatLngTuple = getSelectedPointCoordinate(leafletEvent)
 
-  popupContent.innerHTML = `<p>lat:${JSON.stringify(currentPointLayer.lat)}</p>`
-  popupContent.innerHTML += `<p>lng:${JSON.stringify(currentPointLayer.lng)}</p>`
-  popupContent.innerHTML += `<p>label:${label}</p>`
-  popupContent.innerHTML += `<p>id:${leafletEvent.layer._leaflet_id}</p>`
+  popupContent.innerHTML = `<span>lat:${JSON.stringify(currentPointLayer.lat)}<br/>`
+  popupContent.innerHTML += `lng:${JSON.stringify(currentPointLayer.lng)}<br/>`
+  popupContent.innerHTML += `label:${label}, id:${leafletEvent.layer._leaflet_id}</span>`
 
   const popupDiv: HTMLDivElement = document.createElement("div");
   popupDiv.className = "leaflet-popup-content-inner"
@@ -121,13 +120,13 @@ onMounted(async () => {
   map.on('pm:create', (e: L.Evented) => {
       if (e.shape === 'IncludeMarkerPrompt') {
         console.log("pm:create, IncludeMarkerPrompt: ", e)
-        const div = getPopupContentPoint(map, e, 1)
+        const div = getPopupContentPoint(e, 1)
         e.layer.bindPopup(div).openPopup();
         promptsArrayRef.value.push(getPointPromptElement(e, 1))
       }
       if (e.shape === 'ExcludeMarkerPrompt') {
         console.log("pm:create, ExcludeMarkerPrompt: ", e)
-        const div = getPopupContentPoint(map, e, 0)
+        const div = getPopupContentPoint(e, 0)
         e.layer.bindPopup(div).openPopup();
         promptsArrayRef.value.push(getPointPromptElement(e, 0))
       }
@@ -146,7 +145,7 @@ onMounted(async () => {
         promptsArrayRef.value = promptsArrayRef.value.filter(el => {
           return el.id != e.layer._leaflet_id
         })
-        console.log("pm:remove e:", e)
+        console.log("pm:removed e:", e)
       }
     })
 });
