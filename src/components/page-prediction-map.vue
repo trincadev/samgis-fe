@@ -66,16 +66,13 @@ const getPopupContentPoint = (leafletEvent: L.Evented, label: number) => {
 }
 
 const sendMLRequest = async (leafletMap: L.Map, promptRequest: Array<IPointPrompt|IRectanglePrompt>, sourceType: SourceTileType = "OpenStreetMap") => {
-  let localMapTile: IMapTile = mapTilesUrl[sourceType]
-  let url = localMapTile.url
-  console.log("sendMLRequest:: url: ", url)
   console.log("sendMLRequest:: sourceType: ", sourceType)
   console.log("sendMLRequest:: promptRequest: ", promptRequest.length, "::", promptRequest)
   const bodyRequest: IBodyLatLngPoints = {
     bbox: getExtentCurrentViewMapBBox(leafletMap),
     prompt: promptRequest,
     zoom: leafletMap.getZoom(),
-    source_type: url
+    source_type: sourceType
   }
   console.log("sendMLRequest:: bodyRequest: ", bodyRequest)
   const geojsonOutputOnMounted = await getGeoJSON(bodyRequest, "/api/ml-fastsam/", props.accessToken)
