@@ -125,6 +125,7 @@ export const getCurrentBasemap = (url: string) => {
 export const updateMapData = (localMap: Map, getPopupContentPointFn: Function, promptsArrayRef: Ref) => {
 
   localMap.on('pm:create', (e: Evented) => {
+    responseMessageRef.value = ""
     if (e.shape === 'IncludeMarkerPrompt') {
       console.log("pm:create, IncludeMarkerPrompt: ", e)
       const div = getPopupContentPointFn(e, 1)
@@ -148,6 +149,7 @@ export const updateMapData = (localMap: Map, getPopupContentPointFn: Function, p
     }
   });
   localMap.on('pm:remove', (e: Evented) => {
+    responseMessageRef.value = ""
     if (e.type == "pm:remove" ) {
       promptsArrayRef.value = promptsArrayRef.value.filter((el: Evented) => {
         return el.id != e.layer._leaflet_id

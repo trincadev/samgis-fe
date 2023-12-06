@@ -47,7 +47,6 @@ const props = defineProps<{
 }>()
 
 const getPopupContentPoint = (leafletEvent: L.Evented, label: number) => {
-  responseMessageRef.value = ""
   let popupContent: HTMLDivElement = document.createElement("div");
   let currentPointLayer: LatLngTuple = getSelectedPointCoordinate(leafletEvent)
 
@@ -66,6 +65,11 @@ const sendMLRequest = async (leafletMap: L.Map, promptRequest: Array<IPointPromp
   let localMapTile: IMapTile = mapTilesUrl[sourceType]
   let url = localMapTile.url
   console.log("sendMLRequest:: promptRequest: ", url, "|", sourceType, "!", promptRequest)
+  if (promptRequest.values.length < 1) {
+    const msg = "empty prompt request"
+    responseMessageRef.value = msg
+    throw Error(msg)
+  }
   const bodyRequest: IBodyLatLngPoints = {
     bbox: getExtentCurrentViewMapBBox(leafletMap),
     prompt: promptRequest,
