@@ -1,7 +1,10 @@
 <template>
   <div class="map-predictions-container">
     <div class="map-predictions" id="map" />
-    <button @click="sendMLRequest(map, promptsArrayRef, currentBaseMapNameRef)">send ML request</button>
+    <button @click="sendMLRequest(map, promptsArrayRef, currentBaseMapNameRef)">
+      <div v-if="responseMessageRef" class="hidden-message">{{ responseMessageRef }}</div>
+      <div v-else>send ML request</div>
+    </button>
     <p>current zoom: {{ currentZoomRef }}</p>
     <p>current map bbox: {{ currentMapBBoxRef }}</p>
     <p>prompts array: {{ promptsArrayRef }}</p>
@@ -128,5 +131,12 @@ onMounted(async () => {
 
 .leaflet-popup-content-inner {
   display: flex;
+}
+
+.hidden-message {
+  width: 200px;
+  white-space: nowrap; 
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>
