@@ -1,13 +1,17 @@
 <template>
   <div class="map-predictions-container">
     <div class="map-predictions" id="map" />
-    <button @click="sendMLRequest(map, promptsArrayRef, currentBaseMapNameRef)">
-      <div v-if="responseMessageRef" class="hidden-message">{{ responseMessageRef }}</div>
+    <button
+      @click="sendMLRequest(map, promptsArrayRef, currentBaseMapNameRef)"
+      :disabled="promptsArrayRef.length == 0"
+      >
+      <div v-if="promptsArrayRef.length == 0">empty prompt...</div>
+      <div v-else-if="responseMessageRef" class="hidden-message">{{ responseMessageRef }}</div>
       <div v-else>send ML request</div>
     </button>
     <p>current zoom: {{ currentZoomRef }}</p>
     <p>current map bbox: {{ currentMapBBoxRef }}</p>
-    <p>prompts array: {{ promptsArrayRef }}</p>
+    <p>prompts array: {{ promptsArrayRef.length }} elements, {{ promptsArrayRef }}</p>
     <p>current base map name/type: {{ currentBaseMapNameRef }}</p>
   </div>
   <br />
@@ -64,12 +68,9 @@ const getPopupContentPoint = (leafletEvent: L.Evented, label: number) => {
 const sendMLRequest = async (leafletMap: L.Map, promptRequest: Array<IPointPrompt|IRectanglePrompt>, sourceType: SourceTileType = "OpenStreetMap") => {
   let localMapTile: IMapTile = mapTilesUrl[sourceType]
   let url = localMapTile.url
-  console.log("sendMLRequest:: promptRequest: ", url, "|", sourceType, "!", promptRequest)
-  if (promptRequest.length < 1) {
-    const msg = "empty prompt request"
-    responseMessageRef.value = msg
-    throw Error(msg)
-  }
+  console.log("sendMLRequest:: url: ", url)
+  console.log("sendMLRequest:: sourceType: ", sourceType)
+  console.log("sendMLRequest:: promptRequest: ", promptRequest.length, "::", promptRequest)
   const bodyRequest: IBodyLatLngPoints = {
     bbox: getExtentCurrentViewMapBBox(leafletMap),
     prompt: promptRequest,
