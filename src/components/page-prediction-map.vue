@@ -65,7 +65,7 @@ const sendMLRequest = async (leafletMap: L.Map, promptRequest: Array<IPointPromp
   let localMapTile: IMapTile = mapTilesUrl[sourceType]
   let url = localMapTile.url
   console.log("sendMLRequest:: promptRequest: ", url, "|", sourceType, "!", promptRequest)
-  if (promptRequest.values.length < 1) {
+  if (promptRequest.length < 1) {
     const msg = "empty prompt request"
     responseMessageRef.value = msg
     throw Error(msg)
