@@ -1,10 +1,21 @@
 import { ref } from "vue"
+import type { ServiceTiles } from "./types"
+
+export const prefix: string = " &copy; <a target=\"_blank\" href=\"https://leafletjs.com\">leaflet</a>"
+export const mapTilesUrl: ServiceTiles = {
+  OpenStreetMap: {
+    url: "https://{s}.tile.osm.org/{z}/{x}/{y}.png",
+    attribution: "&copy; <a target=\"_blank\" href=\"https://osm.org/copyright\">OpenStreetMap</a> contributors "
+  },
+  Satellite: {
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    attribution: '&copy; Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+  }
+}
 
 export const maxZoom: number = 20
 export const minZoom: number = 3
 export const waitingString = "waiting..."
-export const attribution: string = "&copy; <a target=\"_blank\" href=\"https://osm.org/copyright\">OpenStreetMap</a> contributors "
-export const prefix: string = " &copy; <a target=\"_blank\" href=\"https://leafletjs.com\">leaflet</a>"
 export const durationRef = ref(0)
 export const numberOfPolygonsRef = ref(0)
 export const numberOfPredictedMasksRef = ref(0)

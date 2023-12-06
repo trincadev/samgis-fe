@@ -1,10 +1,11 @@
 <template>
   <div class="map-predictions-container">
     <div class="map-predictions" id="map" />
-    <button @click="sendMLRequest(map, promptsArrayRef)">send ML request</button>
+    <button @click="sendMLRequest(map, promptsArrayRef, currentBaseMapNameRef)">send ML request</button>
     <p>current zoom: {{ currentZoomRef }}</p>
     <p>current map bbox: {{ currentMapBBoxRef }}</p>
     <p>prompts array: {{ promptsArrayRef }}</p>
+    <p>current base map name/type: {{ currentBaseMapNameRef }}</p>
   </div>
   <br />
   <div v-if="responseMessageRef">
@@ -25,11 +26,11 @@ import "leaflet/dist/leaflet.css";
 import "@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css";
 import { onMounted, ref, type Ref } from "vue";
 
-import { maxZoom, minZoom, geojsonRef, responseMessageRef, durationRef, numberOfPolygonsRef, numberOfPredictedMasksRef, attribution, prefix } from "./constants";
-import { getSelectedPointCoordinate, getExtentCurrentViewMapBBox, setGeomanControls, getGeoJSON, updateMapData } from "./helpers";
-import type { IBodyLatLngPoints, IPointPrompt, IRectanglePrompt } from "./types";
+import { maxZoom, minZoom, geojsonRef, responseMessageRef, durationRef, numberOfPolygonsRef, numberOfPredictedMasksRef, prefix, mapTilesUrl } from "./constants";
+import { getSelectedPointCoordinate, getExtentCurrentViewMapBBox, setGeomanControls, getGeoJSON, updateMapData, getTileService, getCurrentBasemap } from "./helpers";
+import type { IBodyLatLngPoints, IMapTile, IPointPrompt, IRectanglePrompt, SourceTileType } from "./types";
 
-
+const currentBaseMapNameRef = ref()
 const currentMapBBoxRef = ref()
 const currentZoomRef = ref()
 const promptsArrayRef: Ref<Array<IPointPrompt|IRectanglePrompt>> = ref([])
@@ -58,13 +59,15 @@ const getPopupContentPoint = (leafletEvent: L.Evented, label: number) => {
   return popupDiv
 }
 
-const sendMLRequest = async (leafletMap: L.Map, promptRequest: Array<IPointPrompt|IRectanglePrompt>) => {
-  console.log("sendMLRequest:: promptRequest: ", promptRequest)
+const sendMLRequest = async (leafletMap: L.Map, promptRequest: Array<IPointPrompt|IRectanglePrompt>, sourceType: SourceTileType = "OpenStreetMap") => {
+  let localMapTile: IMapTile = mapTilesUrl[sourceType]
+  let url = localMapTile.url
+  console.log("sendMLRequest:: promptRequest: ", url, "|", sourceType, "!", promptRequest)
   const bodyRequest: IBodyLatLngPoints = {
     bbox: getExtentCurrentViewMapBBox(leafletMap),
     prompt: promptRequest,
     zoom: leafletMap.getZoom(),
-    source_type: "Satellite"
+    source_type: url
   }
   console.log("sendMLRequest:: bodyRequest: ", bodyRequest)
   const geojsonOutputOnMounted = await getGeoJSON(bodyRequest, "/api/ml-fastsam/", props.accessToken)
@@ -78,20 +81,13 @@ const updateZoomBboxMap = (localMap: L.map) => {
 }
 
 onMounted(async () => {
-  const osm = L.tileLayer("https://{s}.tile.osm.org/{z}/{x}/{y}.png", {
-    minZoom: Number(minZoom),
-    maxZoom: Number(maxZoom),
-    attribution: attribution
-  });
-  const osmHOT = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
-    minZoom: Number(minZoom),
-    maxZoom: Number(maxZoom),
-    attribution: '© OpenStreetMap contributors, Tiles style by Humanitarian OpenStreetMap Team hosted by OpenStreetMap France'
-  });
+  const osm = getTileService("OpenStreetMap", minZoom, maxZoom)
+  const Satellite = getTileService("Satellite", minZoom, maxZoom)
   const baseMaps = {
     "OpenStreetMap": osm,
-    "<span style='color: red'>OpenStreetMap.HOT</span>": osmHOT
+    "Esri WorldImagery": Satellite
   };
+  currentBaseMapNameRef.value = "OpenStreetMap"
 
   map = L.map('map', {
     center: props.center,
@@ -102,7 +98,7 @@ onMounted(async () => {
   L.control.scale({ position: "bottomleft", imperial: false, metric: true }).addTo(map);
 
   L.control.layers(baseMaps).addTo(map);
-  setGeomanControls(map, getPopupContentPoint)
+  setGeomanControls(map)
   updateZoomBboxMap(map)
 
   map.on("zoomend", function (e: Event) {
@@ -114,6 +110,9 @@ onMounted(async () => {
   });
 
   updateMapData(map, getPopupContentPoint, promptsArrayRef)
+  map.on('baselayerchange', function (e: L.Evented) {
+    currentBaseMapNameRef.value = getCurrentBasemap(e.layer._url)
+  });
 });
 </script>
 

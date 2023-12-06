@@ -1,10 +1,10 @@
-import { Evented, LatLngTuple, Map } from "leaflet";
-import { responseMessageRef, waitingString, durationRef, numberOfPolygonsRef, numberOfPredictedMasksRef, geojsonRef } from "./constants";
-import type { BboxLatLngTuple, ExcludeIncludeLabelPrompt, IBodyLatLngPoints } from "./types";
+import { Evented, LatLngTuple, Map, tileLayer } from "leaflet";
+import { responseMessageRef, waitingString, durationRef, numberOfPolygonsRef, numberOfPredictedMasksRef, geojsonRef, mapTilesUrl } from "./constants";
+import type { BboxLatLngTuple, ExcludeIncludeLabelPrompt, IBodyLatLngPoints, IMapTile, SourceTileType } from "./types";
 import type { Ref } from "vue";
 
 
-export function setGeomanControls(localMap: Map, getPopupContentPoint: Function) {
+export function setGeomanControls(localMap: Map) {
     // leaflet geoman toolbar
     localMap.pm.addControls({
       position: 'topleft',
@@ -102,6 +102,23 @@ export const getRectanglePromptElement = (e: Evented) => {
     id: e.layer._leaflet_id,
     type: "rectangle",
     data: getSelectedRectangleCoordinatesBBox(e)
+  }
+}
+
+export const getTileService = (mapName: SourceTileType, minZoom: number, maxZoom: number) => {
+  const localMapTile: IMapTile = mapTilesUrl[mapName]
+  return tileLayer(localMapTile.url, {
+    minZoom: Number(minZoom),
+    maxZoom: Number(maxZoom),
+    attribution: localMapTile.attribution
+  });
+}
+
+export const getCurrentBasemap = (url: string) => {
+  for (const [key, value] of Object.entries(mapTilesUrl)) {
+    if (value.url == url) {
+      return key
+    }
   }
 }
 

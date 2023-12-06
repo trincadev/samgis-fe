@@ -32,3 +32,16 @@ export interface IBodyLatLngPoints {
     zoom: number,
     source_type: string
 }
+
+export interface IMapTile {
+    url: string,
+    attribution: string
+}
+
+export type OpenStreetMap = "OpenStreetMap"
+export type Satellite = "Satellite"
+export type SourceTileType = OpenStreetMap | Satellite
+
+export type ServiceTiles = {
+    [key: SourceTileType]: IMapTile;
+};
