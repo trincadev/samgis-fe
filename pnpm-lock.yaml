@@ -14,6 +14,9 @@ dependencies:
   leaflet:
     specifier: ^1.9.4
     version: 1.9.4
+  leaflet-providers:
+    specifier: ^2.0.0
+    version: 2.0.0
   vue:
     specifier: ^3.3.9
     version: 3.3.9
@@ -2218,6 +2221,10 @@ packages:
     dependencies:
       json-buffer: 3.0.1
     dev: true
+
+  /leaflet-providers@2.0.0:
+    resolution: {integrity: sha512-CWwKEnHd66Qsx0m4o5q5ZOa60s00B91pMxnlr4Y22msubfs7dhbZhdMIz8bvZQkrZqi67ppI1fsZRS6vtrLcOA==}
+    dev: false
 
   /leaflet@1.9.4:
     resolution: {integrity: sha512-nxS1ynzJOmOlHp+iL3FyWqK89GtNL8U8rvlMOsQdTTssxZwCXh8N2NB3GDQOL+YR3XnWyZAxwQixURb+FA74PA==}

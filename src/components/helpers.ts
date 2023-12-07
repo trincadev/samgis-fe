@@ -1,10 +1,10 @@
-import { Evented, LatLngTuple, Map, tileLayer } from "leaflet";
-import { responseMessageRef, waitingString, durationRef, numberOfPolygonsRef, numberOfPredictedMasksRef, geojsonRef, mapTilesUrl } from "./constants";
+import L, { Evented, LatLngTuple, tileLayer } from "leaflet";
+import { responseMessageRef, waitingString, durationRef, numberOfPolygonsRef, numberOfPredictedMasksRef, geojsonRef } from "./constants";
 import type { BboxLatLngTuple, ExcludeIncludeLabelPrompt, IBodyLatLngPoints, IMapTile, SourceTileType } from "./types";
 import type { Ref } from "vue";
 
 
-export function setGeomanControls(localMap: Map) {
+export function setGeomanControls(localMap: L.Map) {
     // leaflet geoman toolbar
     localMap.pm.addControls({
       position: 'topleft',
@@ -41,7 +41,7 @@ export function setGeomanControls(localMap: Map) {
     });
 }
 
-export const getSelectedRectangleCoordinatesBBox = (leafletEvent: Map): BboxLatLngTuple => {
+export const getSelectedRectangleCoordinatesBBox = (leafletEvent: L.Map): BboxLatLngTuple => {
   const { _northEast: ne, _southWest: sw } = leafletEvent.layer._bounds
   return { ne, sw }
 }
@@ -49,7 +49,7 @@ export const getSelectedPointCoordinate = (leafletEvent: Evented): LatLngTuple =
   return leafletEvent.layer._latlng
 }
 
-export const getExtentCurrentViewMapBBox = (leafletMap: Map): BboxLatLngTuple => {
+export const getExtentCurrentViewMapBBox = (leafletMap: L.Map): BboxLatLngTuple => {
   const boundaries = leafletMap.getBounds()
   return { ne: boundaries.getNorthEast(), sw: boundaries.getSouthWest() }
 }
@@ -102,23 +102,6 @@ export const getRectanglePromptElement = (e: Evented) => {
     id: e.layer._leaflet_id,
     type: "rectangle",
     data: getSelectedRectangleCoordinatesBBox(e)
-  }
-}
-
-export const getTileService = (mapName: SourceTileType, minZoom: number, maxZoom: number) => {
-  const localMapTile: IMapTile = mapTilesUrl[mapName]
-  return tileLayer(localMapTile.url, {
-    minZoom: Number(minZoom),
-    maxZoom: Number(maxZoom),
-    attribution: localMapTile.attribution
-  });
-}
-
-export const getCurrentBasemap = (url: string) => {
-  for (const [key, value] of Object.entries(mapTilesUrl)) {
-    if (value.url == url) {
-      return key
-    }
   }
 }
 
