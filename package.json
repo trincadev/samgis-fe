@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "vite",
+    "pnpm_dev": "vite",
+    "dev": "deno run -A --node-modules-dir npm:vite",
     "dev_4040": "vite --host 0.0.0.0 --port 4040",
     "build": "vite build",
     "preview": "vite preview --port 5173",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
-    "api": "json-server --host 0.0.0.0 --port 6060 --watch json-server/db.json --routes json-server/routes.json"
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "type": "module",
   "dependencies": {
