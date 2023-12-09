@@ -17,6 +17,7 @@ coverage
 tmp*/*
 /cypress/videos/
 /cypress/screenshots/
+vite.config.ts.*
 
 # Editor directories and files
 .vscode/*

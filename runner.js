@@ -19,14 +19,21 @@ const filterObjectWithoutKeys = (obj, filterKey) => {
 
 const commands = filterObjectByKeys(env, "COMMAND")
 const variables = filterObjectWithoutKeys(env, "COMMAND")
-let exec_string = escape(`${commands["COMMAND1"]} `)
+let execString = escape(`${commands["COMMAND1"]} `)
 
+let variablesStringWithReturnCarriage = "\n"
 for (const [key, value] of Object.entries(variables)) {
-    exec_string += escape(` ${key}=${value} `)
+    variablesStringWithReturnCarriage += escape(` ${key}=${value} `) + "\n"
+    execString += escape(` ${key}=${value} `)
 }
-exec_string += escape(` ${commands["COMMAND2"]}`)
+execString += escape(` ${commands["COMMAND2"]}`)
 
-console.log("run the ESCAPED exec_string:", exec_string)
+console.log(`use the command: '${commands["COMMAND1"]}'`)
+console.log(`loading the variables: ${variablesStringWithReturnCarriage}`)
+console.log(`to finally exec the command: '${commands["COMMAND2"]}'`)
+console.log("...")
+
+console.log("run the ESCAPED exec_string:", execString)
 const shouldProceed = confirm("Do you want to proceed?");
 console.log("Should proceed?", shouldProceed);
 if (!shouldProceed) {
@@ -34,4 +41,4 @@ if (!shouldProceed) {
     Deno.exit(1);
 }
 console.log("running command...");
-await exec(exec_string)
+await exec(execString)
