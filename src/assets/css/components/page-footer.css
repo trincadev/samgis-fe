@@ -106,7 +106,7 @@
 .page-footer__hyperlink,
 .page-footer__hyperlink:active,
 .page-footer__hyperlink:visited {
-  color: var(--white);
+  color: white;
 }
 
 .page-footer__hyperlink:hover {

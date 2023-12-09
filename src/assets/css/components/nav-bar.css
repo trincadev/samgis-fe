@@ -8,7 +8,7 @@
   box-shadow: rgb(90 95 102) 0-1.5px 0 inset;
 
   z-index: 300;
-  background-color: var(--black);
+  background-color: white;
 }
 
 .nav-bar {
@@ -83,7 +83,7 @@
 }
 
 .nav-bar__tab:hover {
-  color: var(--white);
+  color: white;
 }
 
 .nav-bar__icon {
@@ -97,11 +97,11 @@
 
 @media only screen and (max-width: 640px) and (hover: none) {
   .mobile-nav-bar__tab:hover {
-    color: var(--white);
+    color: white;
   }
 
   .mobile-nav-bar__tab--active:hover {
-    color: var(--white);
+    color: white;
   }
 }
 

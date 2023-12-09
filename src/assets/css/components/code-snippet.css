@@ -12,7 +12,7 @@
   width: 100%;
 
   background-color: var(--aluminium);
-  color: var(--black);
+  color: white;
 
   font-family: "Fira Code", source-code-pro, Menlo, Monaco, Consolas,
     "Courier New", monospace;
@@ -39,7 +39,7 @@
 .code-snippet__body {
   margin: 0;
 
-  color: var(--white);
+  color: white;
   font-size: 16px;
   line-height: 32px;
   word-wrap: break-word;

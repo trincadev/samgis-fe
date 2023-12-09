@@ -5,7 +5,7 @@
 }
 
 .auth0-features__title {
-  color: var(--white);
+  color: white;
   font-weight: 600;
   text-align: center;
 
@@ -31,9 +31,9 @@
 .auth0-feature {
   display: block;
 
-  background-color: var(--white);
+  background-color: white;
 
-  color: var(--black);
+  color: white;
 
   cursor: pointer;
 
@@ -56,7 +56,7 @@
 
   margin-top: 0;
 
-  color: var(--black);
+  color: white;
   font-weight: 600;
   letter-spacing: -0.05rem;
 
@@ -73,7 +73,7 @@
 }
 
 .auth0-feature:hover .auth0-feature__headline {
-  text-decoration: underline solid 2px var(--black);
+  text-decoration: underline solid 2px white;
   text-underline-offset: 2px;
 
   transition: all 0.3s ease-in-out 0s;

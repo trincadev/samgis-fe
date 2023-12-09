@@ -10,7 +10,7 @@
 
   z-index: 300;
 
-  background-color: var(--black);
+  background-color: white;
 }
 
 .mobile-nav-bar {
@@ -57,7 +57,7 @@
   position: fixed;
   left: 0;
   top: 6.4rem;
-  background-color: var(--black);
+  background-color: white;
 
   z-index: 300;
 }
@@ -87,8 +87,8 @@
   line-height: 16px;
 
   padding: 3.2rem 2.4rem;
-  background-color: var(--black);
-  color: var(--white);
+  background-color: white;
+  color: white;
   width: 100%;
   box-shadow: rgb(90 95 102) 0-1.5px 0 inset;
 }
@@ -109,7 +109,7 @@
 }
 
 .mobile-nav-bar__tab:hover {
-  color: var(--white);
+  color: white;
 }
 
 .mobile-nav-bar__icon {
@@ -120,16 +120,16 @@
   display: flex;
   justify-content: center;
   padding: 3.2rem;
-  background-color: var(--black);
+  background-color: white;
 }
 
 @media only screen and (max-width: 640px) and (hover: none) {
   .mobile-nav-bar__tab:hover {
-    color: var(--white);
+    color: white;
   }
 
   .mobile-nav-bar__tab--active:hover {
-    color: var(--white);
+    color: white;
   }
 }
 
