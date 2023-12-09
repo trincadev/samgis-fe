@@ -14,15 +14,15 @@
             ></span
           >
         </p>
-        <div class="profile-grid">
-          <div class="profile__header">
-            <img :src="user.picture" alt="Profile" class="profile__avatar" />
-            <div class="profile__headline">
-              <h2 class="profile__title">{{ user.name }}</h2>
-              <span class="profile__description">{{ user.email }}</span>
+        <div class="flex flex-col mt-12">
+          <div class="grid grid-cols-[auto_1fr] gap-x-4">
+            <img :src="user.picture" alt="Profile" class="border-2 rounded-sm h-20 w-20" />
+            <div class="flex flex-col justify-around">
+              <h2 class="mt-0 mb-0 text-white">{{ user.name }}</h2>
+              <span class="text-xl">{{ user.email }}</span>
             </div>
           </div>
-          <div class="profile__details">
+          <div class="mt-8">
             <CodeSnippet title="Decoded ID Token" :code="code" />
           </div>
         </div>
