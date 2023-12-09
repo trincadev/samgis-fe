@@ -11,7 +11,7 @@
         <p>The user interact on a <a class="white_background underlined" href="https://leafletjs.com">leaflet</a> webmap choosing areas to recognize and then
         a serverless python backend responds with a <a class="white_background underlined" href="https://it.wikipedia.org/wiki/GeoJSON">geojson</a>
         containing one or more recognized polygons within the initial webmap.</p>
-        <p>The backend perform machine learning inference using a <a class="" href="https://segment-anything.com">Segment Anything</a> model using 
+        <p>The backend perform machine learning inference using a <a class="white_background" href="https://segment-anything.com">Segment Anything</a> model using 
         <a class="white_background underlined" href="https://onnxruntime.ai">ONNXRuntime</a> as runtime.</p>
         <p>Check about implementation details on my <a class="white_background underlined" href="https://trinca.tornidor.com/projects/samgis-sam-exporter-for-GIS">blog</a>.</p>
       </h4>

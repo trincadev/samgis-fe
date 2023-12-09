@@ -3,7 +3,7 @@
     <router-link to="/">
       <img
         class="nav-bar__logo"
-        src="https://upload.wikimedia.org/wikiversity/en/6/6c/GIS_Layers.png"
+        src="/logo256.png"
         alt="GIS logo"
         width="60"
         height="36"
