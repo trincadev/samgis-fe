@@ -1,7 +1,7 @@
 <template>
-  <div class="page-layout">
+  <div class="flex flex-col items-center h-full w-full">
     <NavBar />
-    <div class="page-layout__content">
+    <div class="flex flex-1 flex-basis flex-col items-center h-full w-full max-w-9xl">
       <slot />
     </div>
     <Footer></Footer>

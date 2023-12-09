@@ -1,3 +1,4 @@
+/* flex flex-col flex-shrink-0 w-full p-12 flex-1  */
 .content-layout {
   flex: 1;
   display: flex;
@@ -36,14 +37,4 @@
 
 #page-description span:last-child {
   margin-bottom: 0;
-}
-
-@media only screen and (max-width: 480px) {
-  .content-layout {
-    padding: 1.6rem;
-  }
-
-  .content__title {
-    font-size: 2.4rem;
-  }
 }

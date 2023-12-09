@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isLoading" class="page-layout">
+  <div v-if="isLoading" class="flex flex-col items-center h-full w-full">
     <PageLoader />
   </div>
   <router-view v-else />

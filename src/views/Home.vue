@@ -22,5 +22,5 @@
 </template>
 
 <script setup lang="ts">
-import PageLayout from "@/components/page-layout.vue";
+import PageLayout from "@/components/PageLayout.vue";
 </script>
