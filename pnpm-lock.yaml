@@ -31,6 +31,12 @@ devDependencies:
   '@cloudflare/workers-types':
     specifier: ^4.20231121.0
     version: 4.20231121.0
+  '@headlessui/vue':
+    specifier: ^1.7.16
+    version: 1.7.16(vue@3.3.11)
+  '@heroicons/vue':
+    specifier: ^2.0.18
+    version: 2.0.18(vue@3.3.11)
   '@rushstack/eslint-patch':
     specifier: ^1.6.0
     version: 1.6.0
@@ -652,6 +658,23 @@ packages:
       lodash: 4.17.21
       polygon-clipping: 0.15.3
     dev: false
+
+  /@headlessui/vue@1.7.16(vue@3.3.11):
+    resolution: {integrity: sha512-nKT+nf/q6x198SsyK54mSszaQl/z+QxtASmgMEJtpxSX2Q0OPJX0upS/9daDyiECpeAsvjkoOrm2O/6PyBQ+Qg==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      vue: ^3.2.0
+    dependencies:
+      vue: 3.3.11
+    dev: true
+
+  /@heroicons/vue@2.0.18(vue@3.3.11):
+    resolution: {integrity: sha512-BcTC9nq2TkwNSfQuqo96J7ehx4etezypc2YeTq7KsXWxrcrerhkgjLrxGRBnStN0wrXo0Gv4BInybqz5uBG6Cw==}
+    peerDependencies:
+      vue: '>= 3'
+    dependencies:
+      vue: 3.3.11
+    dev: true
 
   /@humanwhocodes/config-array@0.11.13:
     resolution: {integrity: sha512-JSBDMiDKSzQVngfRjOdFXgFfklaXI4K9nLF49Auh21lmBWRLIK3+xTErTWD4KU54pb6coM6ESE7Awz/FNU3zgQ==}

@@ -22,6 +22,8 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20231121.0",
+    "@headlessui/vue": "^1.7.16",
+    "@heroicons/vue": "^2.0.18",
     "@rushstack/eslint-patch": "^1.6.0",
     "@tsconfig/node20": "^20.1.2",
     "@types/node": "^20.10.4",
