@@ -5,11 +5,11 @@
       @click="sendMLRequest(map, promptsArrayRef, currentBaseMapNameRef)"
       :disabled="promptsArrayRef.length == 0"
       >
-      <div v-if="promptsArrayRef.length == 0">empty prompt...</div>
-      <div v-else-if="responseMessageRef" class="text-ellipsis w-48 whitespace-no-wrap overflow-hidden">
+      <span v-if="promptsArrayRef.length == 0">empty prompt...</span>
+      <span v-else-if="responseMessageRef" class="text-ellipsis w-48 whitespace-no-wrap overflow-hidden">
         {{ responseMessageRef }}
-      </div>
-      <div v-else>send ML request</div>
+      </span>
+      <span v-else>send ML request</span>
     </button>
     <p>current zoom: {{ currentZoomRef }}</p>
     <p>current map bbox: {{ currentMapBBoxRef }}</p>
@@ -39,7 +39,6 @@ import { onMounted, ref, type Ref } from "vue";
 import { geojsonRef, responseMessageRef, durationRef, numberOfPolygonsRef, numberOfPredictedMasksRef, prefix, OpenStreetMap, Satellite } from "./constants";
 import { getSelectedPointCoordinate, getExtentCurrentViewMapBBox, setGeomanControls, getGeoJSON, updateMapData } from "./helpers";
 import type { IBodyLatLngPoints, IPointPrompt, IRectanglePrompt, SourceTileType } from "./types";
-import PageLayout from "@/components/PageLayout.vue";
 
 const currentBaseMapNameRef = ref()
 const currentMapBBoxRef = ref()
@@ -126,10 +125,12 @@ onMounted(async () => {
   updateZoomBboxMap(map)
 
   map.on("zoomend", function (e: Event) {
+    // keep Event "e" here or the function won't work
     updateZoomBboxMap(map)
   });
 
   map.on("mousedown", function (e: Event) {
+    e.preventDefault()
     currentMapBBoxRef.value = getExtentCurrentViewMapBBox(map)
   });
 

@@ -1,6 +1,6 @@
-import L, { Evented, LatLngTuple, tileLayer } from "leaflet";
+import L, { Evented, LatLngTuple } from "leaflet";
 import { responseMessageRef, waitingString, durationRef, numberOfPolygonsRef, numberOfPredictedMasksRef, geojsonRef } from "./constants";
-import type { BboxLatLngTuple, ExcludeIncludeLabelPrompt, IBodyLatLngPoints, IMapTile, SourceTileType } from "./types";
+import type { BboxLatLngTuple, ExcludeIncludeLabelPrompt, IBodyLatLngPoints } from "./types";
 import type { Ref } from "vue";
 
 
