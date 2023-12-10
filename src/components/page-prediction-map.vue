@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col flex-shrink-0 w-full p-12 flex-1">
+  <div>
     <div class="map-predictions" id="map" />
     <button
       @click="sendMLRequest(map, promptsArrayRef, currentBaseMapNameRef)"

@@ -1,10 +1,10 @@
 <template>
   <div class="flex flex-col items-center h-full w-full">
     <NavBar />
-    <!-- class="flex flex-col flex-shrink-0 w-full p-12 flex-1 bg-white text-black" -->
-    <!-- flex flex-col flex-shrink-0 w-full p-12 flex-1 -->
-    <div class="items-center h-full w-full max-w-9xl m-8 p-8">
-      <slot />
+    <div class="items-center h-full w-full max-w-9xl p-12">
+      <div class="flex flex-col flex-shrink-0 w-full flex-1 m-8 leading-10">
+        <slot />
+      </div>
     </div>
     <Footer></Footer>
   </div>
