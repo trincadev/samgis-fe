@@ -1,7 +1,6 @@
 <template>
-  <PageLayout>
+  <PageLayout page-title="Profile page">
     <div>
-      <h1 id="page-title">Profile Page</h1>
       <div>
         <p id="flex flex-col">
           <span>You can use the <strong>ID Token</strong> to get the profile

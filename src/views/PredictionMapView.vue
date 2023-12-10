@@ -1,6 +1,5 @@
 <template>
-    <PageLayout>
-      <h1 id="page-title">Predictions Map Page</h1>
+  <PageLayout page-title="Prediction map page">
       <div>
         <p>This page displays predictions made with a remote machine learning model living within an AWS Lambda.</p>
 

@@ -1,6 +1,5 @@
 <template>
-  <PageLayout>
-      <h1>SamGIS: segment Anything applied to geodata</h1>
+  <PageLayout page-title="SamGIS: segment Anything applied to geodata">
     <p>SamGIS is an attempt to perform
       <a href="https://developer.ibm.com/learningpaths/get-started-artificial-intelligence/ai-basics/ai-beginners-guide">machine learning</a>
       <span>&ensp;</span>
