@@ -1,3 +1,4 @@
+/* flex flex-col w-full rounded-lg mt-12 overflow-hidden */
 .code-snippet {
   display: flex;
   flex-direction: column;
@@ -7,35 +8,28 @@
   overflow: hidden;
 }
 
+/* h-20 w-full bg-gray-600 text-white font-semibold */
 .code-snippet__title {
   height: 4.8rem;
   width: 100%;
-
-  background-color: var(--aluminium);
   color: white;
-
-  font-family: "Fira Code", source-code-pro, Menlo, Monaco, Consolas,
-    "Courier New", monospace;
   font-weight: 600;
-
-  /*  responsive */
-
-  font-size: 1.6rem;
-  line-height: 2.4rem;
-  padding: 1.2rem 1.6rem;
 }
 
+/* bg-gray-600 overflow-x-auto */
 .code-snippet__container {
   min-height: 32.4rem;
-  background-color: var(--dark-aluminium);
+  background-color: gray;
   overflow-x: auto;
 }
 
+/* inline-block p-8 */
 .code-snippet__wrapper {
   display: inline-block;
   padding: 32px;
 }
 
+/* m-0 text-white text-base leading-8 whitespace-pre-wrap breaks-words */
 .code-snippet__body {
   margin: 0;
 
