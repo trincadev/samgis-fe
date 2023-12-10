@@ -1,5 +1,5 @@
 <template>
-  <div class="fixed flex justify-center flex-shrink-0 w-full bg-white">
+  <div class="fixed flex flex-shrink-0 w-full bg-white">
     <nav class="flex items-center flex-shrink-0 h-20 m-0">
       <NavBarBrand />
       <NavBarTabs />

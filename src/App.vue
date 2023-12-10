@@ -1,8 +1,10 @@
 <template>
-  <div v-if="isLoading" class="flex flex-col items-center h-full w-full">
-    <PageLoader />
+  <div class="m-4">
+    <div v-if="isLoading" class="flex flex-col items-center h-full w-full">
+      <PageLoader />
+    </div>
+    <router-view v-else />
   </div>
-  <router-view v-else />
 </template>
 
 <script setup lang="ts">

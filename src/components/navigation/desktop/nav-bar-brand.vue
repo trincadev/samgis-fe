@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center h-full mr-16">
+  <div class="flex items-center h-full mr-6 ml-12">
     <router-link to="/">
       <img
         class="h-12"
