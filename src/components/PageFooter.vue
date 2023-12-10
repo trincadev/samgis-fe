@@ -17,5 +17,5 @@
 </template>
 
 <script setup lang="ts">
-import PageFooterHyperlink from "@/components/page-footer-hyperlink.vue";
+import PageFooterHyperlink from "@/components/PageFooterHyperlink.vue";
 </script>

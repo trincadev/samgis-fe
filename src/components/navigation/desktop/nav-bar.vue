@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import NavBarBrand from "@/components/navigation/desktop/nav-bar-brand.vue";
-import NavBarButtons from "@/components/navigation/desktop/nav-bar-buttons.vue";
-import NavBarTabs from "@/components/navigation/desktop/nav-bar-tabs.vue";
+import NavBarBrand from "@/components/navigation/desktop/NavBarBrand.vue";
+import NavBarButtons from "@/components/navigation/desktop/NavBarButtons.vue";
+import NavBarTabs from "@/components/navigation/desktop/NavBarTabs.vue";
 </script>

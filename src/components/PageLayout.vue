@@ -12,5 +12,5 @@
 
 <script setup lang="ts">
 import NavBar from "@/components/navigation/desktop/nav-bar.vue";
-import Footer from "@/components/page-footer.vue"
+import Footer from "@/components/PageFooter.vue"
 </script>

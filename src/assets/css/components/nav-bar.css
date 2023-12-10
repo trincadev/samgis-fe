@@ -93,6 +93,7 @@
   display: none;
 }
 
+/* flex ml-6 */
 .nav-bar__buttons {
   display: flex;
   margin-left: 24px;

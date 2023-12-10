@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import NavBarTab from "@/components/navigation/desktop/nav-bar-tab.vue";
+import NavBarTab from "@/components/navigation/desktop/NavBarTab.vue";
 import { useAuth0 } from "@auth0/auth0-vue";
 
 const { isAuthenticated } = useAuth0();

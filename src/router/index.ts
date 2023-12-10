@@ -1,11 +1,11 @@
-import Callback from "@/views/Callback.vue";
-import Home from "@/views/Home.vue";
+import Callback from "@/views/CallbackView.vue";
+import Home from "@/views/HomeView.vue";
 import { authGuard } from "@auth0/auth0-vue";
 import { createRouter, createWebHistory } from "vue-router";
 
-const NotFound = () => import("@/views/NotFound.vue");
-const Profile = () => import("@/views/Profile.vue");
-const PredictionMap = () => import("@/views/PredictionMap.vue");
+const NotFound = () => import("@/views/NotFoundView.vue");
+const Profile = () => import("@/views/ProfileView.vue");
+const PredictionMap = () => import("@/views/PredictionMapView.vue");
 
 const routes = [
   {

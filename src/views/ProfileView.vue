@@ -32,7 +32,7 @@
 </template>
 
 <script setup>
-import CodeSnippet from "@/components/code-snippet.vue";
+import CodeSnippet from "@/components/CodeSnippet.vue";
 import PageLayout from "@/components/PageLayout.vue";
 import { useAuth0 } from "@auth0/auth0-vue";
 

@@ -16,7 +16,7 @@
 import { onMounted, ref } from 'vue';
 import { useAuth0 } from "@auth0/auth0-vue";
 
-import PredictionMap from '@/components/page-prediction-map.vue';
+import PredictionMap from '@/components/PagePredictionMap.vue';
 import PageLayout from "@/components/PageLayout.vue";
 
 const mapName = ref("prediction-map");

@@ -1,15 +1,9 @@
-/* eslint-env node */
-import '@rushstack/eslint-patch/modern-module-resolution'
-
-export default {
-  root: true,
-  'extends': [
-    'plugin:vue/vue3-essential',
-    'eslint:recommended',
-    '@vue/eslint-config-typescript',
-    '@vue/eslint-config-prettier/skip-formatting'
+module.exports = {
+  extends: [
+    'plugin:vue/vue3-strongly-recommended'
   ],
   parserOptions: {
-    ecmaVersion: 'latest'
+    ecmaVersion: 'latest',
+    sourceType: 'module'
   }
-}
+};
