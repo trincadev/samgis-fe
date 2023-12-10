@@ -1,5 +1,6 @@
 <template>
-  <ul class="bg-gray-200 fixed w-full z-999">
+  <!-- style here is needed to avoid override from leafletjs css -->
+  <ul class="bg-gray-200 fixed w-full" style="z-index: 1001">
     <li class="float-left"><NavBarBrand /></li>
     <li class="float-left"><NavBarTab path="/blog" label="My blog and website" /></li>
     <li class="float-left"><NavBarTab path="/docs" label="SamGIS Documentation" /></li>

@@ -6,7 +6,12 @@
 
         <div id="map-container-md">
           <!-- {"lat":46.221324377125434,"lng":9.319281622674922}, zoom:12-->
-          <PredictionMap :center='[46.187787809247155, 9.409068707518045]' :mapName="mapName" zoom=13 :accessToken="accessToken"/>
+          <PredictionMap
+            :center='[46.187787809247155, 9.409068707518045]'
+            :mapName="mapName"
+            zoom=13
+            :accessToken="accessToken"
+          />
         </div>
       </div>
     </PageLayout>
