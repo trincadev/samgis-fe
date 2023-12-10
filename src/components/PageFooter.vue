@@ -1,18 +1,13 @@
 <template>
-  <footer class="flex flex-shrink-0 w-full mt-10 font-medium text-center text-2xl leading-10">
-    <div class="grid w-full p-12 auto-cols-auto max-w-6xl">
-      <div class="grid auto-cols-auto gap-2">
-        <div class="text-left">
-          <p class="font-medium mb-6">
-            <span>An inference machine learning POC applied to GIS thanks to
-              <PageFooterHyperlink path="https://github.com/vietanhdev/samexporter/">SAM Exporter</PageFooterHyperlink>
-              and inspired by <PageFooterHyperlink path="https://samgeo.gishub.org/">Segment Geospatial</PageFooterHyperlink>
-            </span>
-          </p>
-        </div>
-      </div>
-      
-    </div>
+  <!-- style 'z-index: 1001' here is needed to avoid override from leafletjs css -->
+  <footer class="fixed bottom-0 w-full bg-gray-200 text-center font-medium" style="z-index: 1001">
+    <p>
+      <span>SamGIS: An inference machine learning POC applied to GIS thanks to
+        <PageFooterHyperlink path="https://github.com/vietanhdev/samexporter/">SAM Exporter</PageFooterHyperlink>
+        and inspired by
+        <PageFooterHyperlink path="https://samgeo.gishub.org/">Segment Geospatial</PageFooterHyperlink>
+      </span>
+    </p>
   </footer>
 </template>
 
