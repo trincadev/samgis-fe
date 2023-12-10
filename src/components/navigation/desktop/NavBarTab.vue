@@ -1,13 +1,13 @@
 <template>
-  <NavBarTextElement class="font-medium">
-    <router-link
-      :to="props.path"
-      exact
-      class="no-underline"
-      active-class="bg-gray-600 text-white pb-5 pt-2 border-white"
-    >
-      {{ props.label }}
-    </router-link>
+  <NavBarTextElement class="font-medium min-w-[100px]">
+      <router-link
+        :to="props.path"
+        exact
+        class="no-underline pl-1 pr-1"
+        active-class="bg-white pb-6 pt-2 border-white pl-1 pr-1"
+      >
+        {{ props.label }}
+      </router-link>
   </NavBarTextElement>
 </template>
 
