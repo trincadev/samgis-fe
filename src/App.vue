@@ -1,8 +1,6 @@
 <template>
-  <div class="m-4">
-    <div v-if="isLoading" class="flex flex-col items-center h-full w-full">
-      <PageLoader />
-    </div>
+  <div class="mr-4 mb-4 ml-4">
+    <PageLoader v-if="isLoading"/>
     <router-view v-else />
   </div>
 </template>

@@ -1,13 +1,14 @@
 <template>
-  <button
-    class="rounded-lg font-semibold cursor-pointer select-none text-2xl leading-10 min-w-32 p-3"
-    @click="props.click"
-  >
-    <slot></slot>
-  </button>
+  <NavBarTextElement>
+    <button class="pb-2" @click="props.click">
+      <slot></slot>
+    </button>
+  </NavBarTextElement>
 </template>
 
 <script setup lang="ts">
+import NavBarTextElement from '@/components/navigation/desktop/NavBarTextElement.vue'
+
 const props = defineProps<{
   click: Function
 }>()

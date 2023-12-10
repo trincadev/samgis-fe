@@ -1,11 +1,14 @@
 <template>
-  <div class="flex items-center h-full mr-6 ml-12">
+  <NavBarElement class="pl-2">
     <router-link to="/">
       <img
-        class="h-12"
         src="/logo.png"
         alt="GIS logo"
       />
     </router-link>
-  </div>
+  </NavBarElement>
 </template>
+
+<script setup lang="ts">
+import NavBarElement from '@/components/navigation/desktop/NavBarElement.vue'
+</script>
