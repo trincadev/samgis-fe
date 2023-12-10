@@ -16,7 +16,7 @@
 </template>
 
 <script setup>
-import NavBar from "@/components/navigation/desktop/nav-bar.vue";
+import NavBar from "@/components/navigation/desktop/NavBar.vue";
 import PageLayout from "@/components/PageLayout.vue";
 import { useAuth0 } from "@auth0/auth0-vue";
 
