@@ -1,6 +1,9 @@
 @tailwind base;
 
 @layer base {
+    * {
+        @apply box-border;
+    }
     h1 {
         @apply text-3xl;
     }

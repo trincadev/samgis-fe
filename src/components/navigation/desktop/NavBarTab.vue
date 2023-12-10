@@ -3,8 +3,8 @@
       <router-link
         :to="props.path"
         exact
-        class="no-underline pl-1 pr-1"
-        active-class="bg-white pb-6 pt-2 border-white pl-1 pr-1"
+        class="no-underline pl-2 pr-2"
+        active-class="bg-white pb-6 pt-2 border-white pl-2 pr-2"
       >
         {{ props.label }}
       </router-link>
