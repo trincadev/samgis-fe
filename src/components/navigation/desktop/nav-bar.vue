@@ -1,6 +1,6 @@
 <template>
-  <div class="nav-bar__container">
-    <nav class="nav-bar">
+  <div class="fixed flex justify-center flex-shrink-0 w-full bg-white">
+    <nav class="flex items-center flex-shrink-0 h-20 m-0">
       <NavBarBrand />
       <NavBarTabs />
       <NavBarButtons />

@@ -1,5 +1,5 @@
 <template>
-  <div class="loader">
+  <div class="animate-spin h-20 w-20 m-auto">
     <img :src="loadingImg" alt="Loading..." />
   </div>
 </template>

@@ -1,12 +1,10 @@
 <template>
-  <div class="nav-bar__brand">
+  <div class="flex items-center h-full mr-16">
     <router-link to="/">
       <img
-        class="nav-bar__logo"
-        src="/logo256.png"
+        class="h-12"
+        src="/logo.png"
         alt="GIS logo"
-        width="60"
-        height="36"
       />
     </router-link>
   </div>

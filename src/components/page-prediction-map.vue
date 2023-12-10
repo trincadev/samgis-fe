@@ -1,12 +1,14 @@
 <template>
-  <div class="map-predictions-container">
+  <div class="flex flex-col flex-shrink-0 w-full p-12 flex-1">
     <div class="map-predictions" id="map" />
     <button
       @click="sendMLRequest(map, promptsArrayRef, currentBaseMapNameRef)"
       :disabled="promptsArrayRef.length == 0"
       >
       <div v-if="promptsArrayRef.length == 0">empty prompt...</div>
-      <div v-else-if="responseMessageRef" class="hidden-message">{{ responseMessageRef }}</div>
+      <div v-else-if="responseMessageRef" class="text-ellipsis w-48 whitespace-no-wrap overflow-hidden">
+        {{ responseMessageRef }}
+      </div>
       <div v-else>send ML request</div>
     </button>
     <p>current zoom: {{ currentZoomRef }}</p>
@@ -37,6 +39,7 @@ import { onMounted, ref, type Ref } from "vue";
 import { geojsonRef, responseMessageRef, durationRef, numberOfPolygonsRef, numberOfPredictedMasksRef, prefix, OpenStreetMap, Satellite } from "./constants";
 import { getSelectedPointCoordinate, getExtentCurrentViewMapBBox, setGeomanControls, getGeoJSON, updateMapData } from "./helpers";
 import type { IBodyLatLngPoints, IPointPrompt, IRectanglePrompt, SourceTileType } from "./types";
+import PageLayout from "@/components/PageLayout.vue";
 
 const currentBaseMapNameRef = ref()
 const currentMapBBoxRef = ref()
@@ -145,16 +148,5 @@ onMounted(async () => {
   display: block;
   position: relative;
   z-index: 1;
-}
-
-.leaflet-popup-content-inner {
-  display: flex;
-}
-
-.hidden-message {
-  width: 200px;
-  white-space: nowrap; 
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 </style>

@@ -2,8 +2,8 @@
   <router-link
     :to="props.path"
     exact
-    class="nav-bar__tab"
-    active-class="nav-bar__tab--active"
+    class="flex flex-row justify-center mr-6 font-medium text-base leading-4"
+    active-class="underline decoration-solid decoration-indigo-300 decoration-4 underline-offset-8"
   >
     {{ props.label }}
   </router-link>

@@ -1,3 +1,4 @@
+/* fixed flex justify-center flex-shrink-0 w-full bg-white z-300 */
 .nav-bar__container {
   position: fixed;
   display: flex;
@@ -5,12 +6,11 @@
   flex-shrink: 0;
   width: 100%;
 
-  box-shadow: rgb(90 95 102) 0-1.5px 0 inset;
-
   z-index: 300;
   background-color: white;
 }
 
+/* flex-1 flex items-center flex-shrink-0 h-20 m-0 */
 .nav-bar {
   flex: 1;
   display: flex;
@@ -26,6 +26,7 @@
   margin: 0;
 }
 
+/* flex items-center h-full mr-16 */
 .nav-bar__brand {
   display: flex;
   align-items: center;
@@ -37,6 +38,7 @@
   margin-right: 64px;
 }
 
+/* flex items-center h-full */
 .nav-bar__link {
   display: flex;
   align-items: center;
@@ -71,6 +73,7 @@
   margin-right: 0;
 }
 
+/* underline decoration-solid decoration-indigo-300 decoration-4 underline-offset-8 */
 .nav-bar__tab--active {
   text-decoration-line: underline;
   text-decoration-style: solid;
@@ -93,91 +96,4 @@
 .nav-bar__buttons {
   display: flex;
   margin-left: 24px;
-}
-
-@media only screen and (max-width: 640px) and (hover: none) {
-  .mobile-nav-bar__tab:hover {
-    color: white;
-  }
-
-  .mobile-nav-bar__tab--active:hover {
-    color: white;
-  }
-}
-
-@media only screen and (max-width: 640px) {
-  .nav-bar__container {
-    display: none;
-  }
-
-  .nav-bar__tab {
-    font-size: 1.5rem;
-  }
-
-  .nav-bar {
-    height: 6.4rem;
-
-    padding: 0.8rem 1.6rem;
-  }
-
-  .nav-bar__brand {
-    display: flex;
-    align-items: center;
-
-    margin-right: 1.6rem;
-  }
-
-  .nav-bar__logo {
-    height: 3.2rem;
-  }
-
-  .nav-bar__tab--active {
-    text-decoration-line: none;
-    color: var(--pink);
-  }
-
-  .nav-bar__label {
-    display: none;
-  }
-
-  .nav-bar__icon {
-    display: block;
-    font-size: 3.2rem;
-  }
-
-  .nav-bar__buttons {
-    margin-left: 24px;
-  }
-}
-
-@media only screen and (max-width: 340px) {
-  .nav-bar__tab {
-    font-size: 1.3rem;
-  }
-
-  .nav-bar {
-    height: 6.4rem;
-
-    padding: 0.8rem 1.6rem;
-  }
-
-  .nav-bar__brand {
-    display: flex;
-    align-items: center;
-
-    margin-right: 1.6rem;
-  }
-
-  .nav-bar__logo {
-    height: 2.8rem;
-  }
-
-  .nav-bar__tab--active {
-    text-decoration-line: none;
-    color: var(--pink);
-  }
-
-  .nav-bar__buttons {
-    margin-left: 24px;
-  }
 }
