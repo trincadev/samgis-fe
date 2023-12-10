@@ -2,7 +2,7 @@
 
 @layer base {
     h1 {
-        @apply text-2xl;
+        @apply text-3xl;
     }
     a {
         @apply underline;

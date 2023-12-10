@@ -2,11 +2,12 @@
   <!-- style 'z-index: 1001' here is needed to avoid override from leafletjs css -->
   <ul class="bg-gray-200 fixed w-full" style="z-index: 1001">
     <li class="float-left"><NavBarBrand /></li>
-    <li class="float-left"><NavBarTab path="/blog" label="My blog and website" /></li>
+    <li class="float-left"><NavBarTab path="/" label="Home" /></li>
+    <li class="float-left"><NavBarTab path="/blog" label="My blog" /></li>
     <li class="float-left"><NavBarTab path="/docs" label="SamGIS Documentation" /></li>
     <template v-if="isAuthenticated">
       <li class="float-left"><NavBarTab path="/prediction-map" label="Prediction Map" /></li>
-      <li class="float-left"><NavBarTab path="/profile" label="Profile" /></li>
+      <li class="float-left"><NavBarTab path="/profile" label="User Profile" /></li>
     </template>
 
     <li class="float-right">

@@ -1,10 +1,10 @@
 <template>
-  <NavBarTextElement>
+  <NavBarTextElement class="font-medium">
     <router-link
       :to="props.path"
       exact
-      class="font-medium"
-      active-class="underline decoration-solid decoration-indigo-300 decoration-4 underline-offset-8"
+      class="no-underline"
+      active-class="bg-gray-600 text-white pb-5 pt-2 border-white"
     >
       {{ props.label }}
     </router-link>
@@ -12,7 +12,6 @@
 </template>
 
 <script setup lang="ts">
-import NavBarElement from '@/components/navigation/desktop/NavBarElement.vue'
 import NavBarTextElement from '@/components/navigation/desktop/NavBarTextElement.vue'
 
 const props = defineProps<{
