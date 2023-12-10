@@ -1,6 +1,6 @@
 <template>
   <NavBarTextElement>
-    <button class="pb-2" @click="props.click">
+    <button class="pb-2 w-24" @click="props.click">
       <slot></slot>
     </button>
   </NavBarTextElement>
