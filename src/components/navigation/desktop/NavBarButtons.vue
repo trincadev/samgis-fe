@@ -1,5 +1,5 @@
 <template>
-  <div class="nav-bar__buttons">
+  <div class="flex ml-6">
     <template v-if="!isAuthenticated">
       <LoginButton />
     </template>
