@@ -1,7 +1,7 @@
 <template>
   <a
     :href="props.path"
-    class="page-footer__hyperlink"
+    class="underline"
     target="_blank"
     rel="noopener noreferrer"
   >

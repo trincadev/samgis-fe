@@ -1,9 +1,9 @@
 <template>
-  <footer class="page-footer">
-    <div class="page-footer-grid">
-      <div class="page-footer-grid__info">
-        <div class="page-footer-info__message">
-          <p class="page-footer-message__headline">
+  <footer class="flex flex-shrink-0 w-full mt-10 font-medium text-center text-2xl leading-10">
+    <div class="grid w-full p-12 auto-cols-auto max-w-6xl">
+      <div class="grid auto-cols-auto gap-2">
+        <div class="text-left">
+          <p class="font-medium mb-6">
             <span>An inference machine learning POC applied to GIS thanks to
               <PageFooterHyperlink path="https://github.com/vietanhdev/samexporter/">SAM Exporter</PageFooterHyperlink>
               and inspired by <PageFooterHyperlink path="https://samgeo.gishub.org/">Segment Geospatial</PageFooterHyperlink>
