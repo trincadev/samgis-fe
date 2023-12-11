@@ -14,7 +14,6 @@
 <script setup lang="ts">
 import NavBar from "@/components/navigation/desktop/NavBar.vue";
 import Footer from "@/components/PageFooter.vue"
-import { LatLngTuple } from 'leaflet'
 
 const props = defineProps<{
   pageTitle: string

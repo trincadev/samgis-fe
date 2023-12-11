@@ -8,14 +8,10 @@
       </div>
     </div>
   </PageLayout>
-  <div class="flex flex-col items-center h-full w-full" v-else>
-    <NavBar />
-    <div class="flex flex-1 flex-basis flex-col items-center h-full w-full max-w-9xl" />
-  </div>
+  <PageLayout page-title="" v-else />
 </template>
 
 <script setup>
-import NavBar from "@/components/navigation/desktop/NavBar.vue";
 import PageLayout from "@/components/PageLayout.vue";
 import { useAuth0 } from "@auth0/auth0-vue";
 
