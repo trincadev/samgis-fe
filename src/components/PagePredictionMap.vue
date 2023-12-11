@@ -1,25 +1,30 @@
 <template>
   <div>
     <div id="map" class="map-predictions" />
+
     <button
+      class="bg-opacity-50 bg-gray-300 h-14 min-w-[240px] max-w-[240px] mt-2 mb-2"
       :disabled="promptsArrayRef.length == 0"
+      v-if="promptsArrayRef.length == 0"
+    >Empty prompt (disabled)</button>
+    <button
+      class="p-2 bg-blue-300 h-14 min-w-[240px] max-w-[240px] mt-2 mb-2 whitespace-no-wrap overflow-hidden truncate"
+      v-else
       @click="sendMLRequest(map, promptsArrayRef, currentBaseMapNameRef)"
     >
-      <span v-if="promptsArrayRef.length == 0">empty prompt...</span>
-      <span v-else-if="responseMessageRef" class="text-ellipsis w-48 whitespace-no-wrap overflow-hidden">
-        {{ responseMessageRef }}
-      </span>
+      <span v-if="responseMessageRef">{{ responseMessageRef }}</span>
       <span v-else>send ML request</span>
     </button>
+
     <p>current zoom: {{ currentZoomRef }}</p>
     <p>current map bbox: {{ currentMapBBoxRef }}</p>
     <p>prompts array: {{ promptsArrayRef.length }} elements, {{ promptsArrayRef }}</p>
     <p>current base map name/type: {{ currentBaseMapNameRef }}</p>
   </div>
   <br />
-  <div v-if="responseMessageRef">
+  <h1 v-if="responseMessageRef">
     <p>{{ responseMessageRef }}</p>
-  </div>
+  </h1>
   <div v-else>
     <p>duration request: {{ durationRef }}</p>
     <p>number Of Polygons: {{ numberOfPolygonsRef }}</p>
@@ -63,6 +68,7 @@ let map: L.map
 type ServiceTiles = {
   [key: SourceTileType]: L.TileLayer;
 };
+const waitingMsg = "waiting..."
 
 const props = defineProps<{
   accessToken: string,
@@ -98,6 +104,7 @@ const sendMLRequest = async (leafletMap: L.Map, promptRequest: Array<IPointPromp
   console.log('sendMLRequest:: bodyRequest: ', bodyRequest)
   const geojsonOutputOnMounted = await getGeoJSON(bodyRequest, '/api/ml-fastsam/', props.accessToken)
   const featureNew = L.geoJSON(geojsonOutputOnMounted)
+  console.log("featureNew::", typeof featureNew, "|", featureNew)
   leafletMap.addLayer(featureNew)
 }
 
@@ -145,7 +152,6 @@ onMounted(async () => {
   })
 
   map.on('mousedown', function(e: Event) {
-    e.preventDefault()
     currentMapBBoxRef.value = getExtentCurrentViewMapBBox(map)
   })
 
