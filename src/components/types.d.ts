@@ -1,24 +1,26 @@
-import { LatLngTuple } from "leaflet";
+import { Evented, LatLngTuple } from "leaflet";
 
 export interface BboxLatLngTuple {
     ne: LatLngTuple,
     sw: LatLngTuple
 }
 
-enum ExcludeIncludeLabelPrompt {
-    EXCLUDE = 0,
-    INCLUDE = 1
+export enum ExcludeIncludeLabelPrompt {
+    ExcludeMarkerPrompt = 0,
+    IncludeMarkerPrompt = 1
 }
 type PointPromptType = "point"
 type RectanglePromptType = "rectangle"
 
 export interface IPointPrompt {
+    id: Evented.layer._url,
     type: PointPromptType,
     data: BboxLatLngTuple,
     label: ExcludeIncludeLabelPrompt
 }
 
 export interface IRectanglePrompt {
+    id: Evented.layer._url,
     type: RectanglePromptType,
     data: {
         ne: BboxLatLngTuple,
@@ -36,4 +38,4 @@ export interface IBodyLatLngPoints {
 export type OpenStreetMap = "OpenStreetMap"
 export type Satellite = "Satellite"
 export type SourceTileType = OpenStreetMap | Satellite
-
+export type ArrayNumber = Array<number>

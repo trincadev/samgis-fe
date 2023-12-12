@@ -4,9 +4,9 @@
 
     <button
       class="bg-opacity-50 bg-gray-300 h-14 min-w-[240px] max-w-[240px] mt-2 mb-2"
-      :disabled="promptsArrayRef.length == 0"
-      v-if="promptsArrayRef.length == 0"
-    >Empty prompt (disabled)</button>
+      :disabled="promptsArrayRef.length == 0 || responseMessageRef === waitingString"
+      v-if="promptsArrayRef.length == 0 || responseMessageRef === waitingString"
+    >{{ responseMessageRef === waitingString ? responseMessageRef : "Empty prompt(disabled)" }}</button>
     <button
       class="p-2 bg-blue-300 h-14 min-w-[240px] max-w-[240px] mt-2 mb-2 whitespace-no-wrap overflow-hidden truncate"
       v-else
@@ -34,12 +34,15 @@
 </template>
 
 <script lang="ts" setup>
-import L, { LatLngTuple, tileLayer } from 'leaflet'
-import 'leaflet-providers'
-import '@geoman-io/leaflet-geoman-free'
-import 'leaflet/dist/leaflet.css'
-import '@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css'
-import { onMounted, ref, type Ref } from 'vue'
+import {
+  control as LeafletControl, Evented as LEvented, geoJSON as LeafletGeoJSON, type LatLngTuple,
+  Map as LMap, map as LeafletMap, tileLayer, TileLayer as LTileLayer
+} from "leaflet";
+import "leaflet/dist/leaflet.css";
+import 'leaflet-providers';
+import "@geoman-io/leaflet-geoman-free";
+import "@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css";
+import { onMounted, ref, type Ref } from "vue";
 
 import {
   durationRef,
@@ -49,11 +52,12 @@ import {
   OpenStreetMap,
   prefix,
   responseMessageRef,
-  Satellite
+  Satellite,
+  waitingString
 } from './constants'
 import {
   getExtentCurrentViewMapBBox,
-  getGeoJSON,
+  getGeoJSONRequest,
   getSelectedPointCoordinate,
   setGeomanControls,
   updateMapData
@@ -64,11 +68,10 @@ const currentBaseMapNameRef = ref()
 const currentMapBBoxRef = ref()
 const currentZoomRef = ref()
 const promptsArrayRef: Ref<Array<IPointPrompt | IRectanglePrompt>> = ref([])
-let map: L.map
+let map: LMap
 type ServiceTiles = {
-  [key: SourceTileType]: L.TileLayer;
+    [key: SourceTileType]: LTileLayer;
 };
-const waitingMsg = "waiting..."
 
 const props = defineProps<{
   accessToken: string,
@@ -77,8 +80,8 @@ const props = defineProps<{
   zoom: string
 }>()
 
-const getPopupContentPoint = (leafletEvent: L.Evented, label: number) => {
-  let popupContent: HTMLDivElement = document.createElement('div')
+const getPopupContentPoint = (leafletEvent: LEvented, label: number): HTMLDivElement => {
+  let popupContent: HTMLDivElement = document.createElement("div");
   let currentPointLayer: LatLngTuple = getSelectedPointCoordinate(leafletEvent)
 
   popupContent.innerHTML = `<span>lat:${JSON.stringify(currentPointLayer.lat)}<br/>`
@@ -92,7 +95,13 @@ const getPopupContentPoint = (leafletEvent: L.Evented, label: number) => {
   return popupDiv
 }
 
-const sendMLRequest = async (leafletMap: L.Map, promptRequest: Array<IPointPrompt | IRectanglePrompt>, sourceType: SourceTileType = OpenStreetMap) => {
+const sendMLRequest = async (leafletMap: LMap, promptRequest: Array<IPointPrompt | IRectanglePrompt>, sourceType: SourceTileType = OpenStreetMap) => {
+  if (map.pm.globalDragModeEnabled()) {
+    map.pm.disableGlobalDragMode()
+  }
+  if (map.pm.globalEditModeEnabled()) {
+    map.pm.disableGlobalEditMode()
+  }
   console.log('sendMLRequest:: sourceType: ', sourceType)
   console.log('sendMLRequest:: promptRequest: ', promptRequest.length, '::', promptRequest)
   const bodyRequest: IBodyLatLngPoints = {
@@ -102,13 +111,13 @@ const sendMLRequest = async (leafletMap: L.Map, promptRequest: Array<IPointPromp
     source_type: sourceType
   }
   console.log('sendMLRequest:: bodyRequest: ', bodyRequest)
-  const geojsonOutputOnMounted = await getGeoJSON(bodyRequest, '/api/ml-fastsam/', props.accessToken)
-  const featureNew = L.geoJSON(geojsonOutputOnMounted)
+  const geojsonOutputOnMounted = await getGeoJSONRequest(bodyRequest, '/api/ml-fastsam/', props.accessToken)
+  const featureNew = LeafletGeoJSON(geojsonOutputOnMounted)
   console.log("featureNew::", typeof featureNew, "|", featureNew)
   leafletMap.addLayer(featureNew)
 }
 
-const updateZoomBboxMap = (localMap: L.Map) => {
+const updateZoomBboxMap = (localMap: LMap) => {
   currentZoomRef.value = localMap.getZoom()
   currentMapBBoxRef.value = getExtentCurrentViewMapBBox(localMap)
 }
@@ -126,37 +135,36 @@ const getCurrentBasemap = (url: string, providersArray: ServiceTiles) => {
 onMounted(async () => {
   const osmTile = tileLayer.provider(OpenStreetMap)
   let localVarSatellite: SourceTileType = import.meta.env.VITE_SATELLITE_NAME ? String(import.meta.env.VITE_SATELLITE_NAME) : Satellite
-  console.log('Satellite:', Satellite)
-  console.log('localVarSatellite:', localVarSatellite)
+  console.log("Satellite:", Satellite)
+  console.log("localVarSatellite:", localVarSatellite)
   const satelliteTile = tileLayer.provider(localVarSatellite)
 
   let baseMaps: ServiceTiles = { OpenStreetMap: osmTile }
   baseMaps[localVarSatellite] = satelliteTile
   currentBaseMapNameRef.value = OpenStreetMap
 
-  map = L.map('map', {
+  map = LeafletMap('map', {
     center: props.center,
-    zoom: props.zoom,
+    zoom: Number(props.zoom),
     layers: [osmTile]
-  })
+  });
   map.attributionControl.setPrefix(prefix)
-  L.control.scale({ position: 'bottomleft', imperial: false, metric: true }).addTo(map)
+  LeafletControl.scale({ position: "bottomleft", imperial: false, metric: true }).addTo(map);
 
-  L.control.layers(baseMaps).addTo(map)
+  LeafletControl.layers(baseMaps).addTo(map);
   setGeomanControls(map)
   updateZoomBboxMap(map)
 
-  map.on('zoomend', function(e: Event) {
-    // keep Event "e" here or the function won't work
+  map.on("zoomend", (e: LEvented) => {
     updateZoomBboxMap(map)
-  })
+  });
 
-  map.on('mousedown', function(e: Event) {
+  map.on("mouseup", (e: LEvented) => {
     currentMapBBoxRef.value = getExtentCurrentViewMapBBox(map)
-  })
+  });
 
   updateMapData(map, getPopupContentPoint, promptsArrayRef)
-  map.on('baselayerchange', function(e: L.Evented) {
+  map.on('baselayerchange', (e: LEvented) => {
     currentBaseMapNameRef.value = getCurrentBasemap(e.layer._url, baseMaps)
   })
 })
