@@ -1,14 +1,8 @@
 <template>
-  <PageLayout page-title="That's an error!" v-if="error">
-    <div class="flex flex-col flex-shrink-0 w-full p-12 flex-1">
-      <div class="text-2xl leading-10">
-        <p id="flex flex-col">
-          <span>{{ error.message }}</span>
-        </p>
-      </div>
-    </div>
+  <PageLayout page-title="Callback" v-if="!error"/>
+  <PageLayout page-title="That's an error!">
+    <span>{{ error.message }}</span>
   </PageLayout>
-  <PageLayout page-title="" v-else />
 </template>
 
 <script setup>

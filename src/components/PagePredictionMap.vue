@@ -3,7 +3,7 @@
     <div id="map" class="map-predictions" />
 
     <button
-      class="bg-gray-300 h-14 min-w-[240px] max-w-[240px] mt-2 mb-2 bg-opacity-50 "
+      class="bg-gray-300 h-14 min-w-[240px] max-w-[240px] mt-2 mb-2 bg-opacity-50"
       :disabled="promptsArrayRef.length == 0 || responseMessageRef === waitingString"
       v-if="promptsArrayRef.length == 0 || responseMessageRef === waitingString"
     >{{ responseMessageRef === waitingString ? responseMessageRef : "Empty prompt(disabled)" }}</button>

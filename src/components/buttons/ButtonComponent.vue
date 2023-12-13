@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import NavBarTextElement from '@/components/navigation/desktop/NavBarTextElement.vue'
+import NavBarTextElement from '@/components/navigation/desktop/SideBarTextElement.vue'
 
 const props = defineProps<{
   click: Function
