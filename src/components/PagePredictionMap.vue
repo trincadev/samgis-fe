@@ -3,14 +3,14 @@
     <div id="map" class="map-predictions" />
 
     <button
-      class="bg-opacity-50 bg-gray-300 h-14 min-w-[240px] max-w-[240px] mt-2 mb-2"
+      class="bg-gray-300 h-14 min-w-[240px] max-w-[240px] mt-2 mb-2 bg-opacity-50 "
       :disabled="promptsArrayRef.length == 0 || responseMessageRef === waitingString"
       v-if="promptsArrayRef.length == 0 || responseMessageRef === waitingString"
     >{{ responseMessageRef === waitingString ? responseMessageRef : "Empty prompt(disabled)" }}</button>
     <button
-      class="p-2 bg-blue-300 h-14 min-w-[240px] max-w-[240px] mt-2 mb-2 whitespace-no-wrap overflow-hidden truncate"
-      v-else
+      class="bg-blue-300 h-14 min-w-[240px] max-w-[240px] mt-2 mb-2 p-2 whitespace-no-wrap overflow-hidden truncate"
       @click="sendMLRequest(map, promptsArrayRef, currentBaseMapNameRef)"
+      v-else
     >
       <span v-if="responseMessageRef">{{ responseMessageRef }}</span>
       <span v-else>send ML request</span>
@@ -22,9 +22,8 @@
     <p>current base map name/type: {{ currentBaseMapNameRef }}</p>
   </div>
   <br />
-  <h1 v-if="responseMessageRef">
-    <p>{{ responseMessageRef }}</p>
-  </h1>
+  <div v-if="responseMessageRef === waitingString" />
+  <h1 v-else-if="responseMessageRef">{{ responseMessageRef }}</h1>
   <div v-else>
     <p>duration request: {{ durationRef }}</p>
     <p>number Of Polygons: {{ numberOfPolygonsRef }}</p>
