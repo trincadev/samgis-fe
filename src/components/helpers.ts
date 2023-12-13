@@ -1,4 +1,3 @@
-// helpers.ts
 import { icon, Evented as LEvented, LatLngTuple, Map as LMap } from 'leaflet'
 import {
   responseMessageRef,
@@ -63,10 +62,10 @@ export function setGeomanControls(localMap: LMap) {
   })
 
   const actionArray = [{
-    onClick(actionEvent: LEvented) {
-      console.log('actionEvent:', typeof actionEvent, '|', actionEvent, '')
-    },
-    name: 'actionName'
+      onClick(actionEvent: LEvented) {
+        console.log('actionEvent:', typeof actionEvent, '|', actionEvent, '')
+      },
+      name: 'actionName'
   }]
   const includeMarkerControl = localMap.pm.Toolbar.copyDrawControl('Marker',
     getCustomGeomanActionsObject('IncludeMarkerPrompt', 'Marker that add recognition regions from SAM prompt requests', actionArray)

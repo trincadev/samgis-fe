@@ -1,10 +1,10 @@
 import { ref } from "vue"
 
-export const prefix: string = " &copy; <a target=\"_blank\" href=\"https://leafletjs.com\">leaflet</a>"
-export const OpenStreetMap: string = "OpenStreetMap"
-export const Satellite: string = "OpenStreetMap.HOT"
-export const maxZoom: number = 20
-export const minZoom: number = 3
+export const prefix = " &copy; <a target=\"_blank\" href=\"https://leafletjs.com\">leaflet</a>"
+export const OpenStreetMap = "OpenStreetMap"
+export const Satellite = "OpenStreetMap.HOT"
+export const maxZoom = 20
+export const minZoom = 3
 export const waitingString = "waiting..."
 export const durationRef = ref(0)
 export const numberOfPolygonsRef = ref(0)
