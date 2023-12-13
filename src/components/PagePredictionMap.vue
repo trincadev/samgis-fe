@@ -6,13 +6,13 @@
       class="bg-gray-300 h-14 min-w-[240px] max-w-[240px] mt-2 mb-2 bg-opacity-50"
       :disabled="promptsArrayRef.length == 0 || responseMessageRef === waitingString"
       v-if="promptsArrayRef.length == 0 || responseMessageRef === waitingString"
-    >{{ responseMessageRef === waitingString ? responseMessageRef : "Empty prompt(disabled)" }}</button>
+    >{{ responseMessageRef === waitingString ? responseMessageRef : "Empty prompt (disabled)" }}</button>
     <button
       class="bg-blue-300 h-14 min-w-[240px] max-w-[240px] mt-2 mb-2 p-2 whitespace-no-wrap overflow-hidden truncate"
       @click="sendMLRequest(map, promptsArrayRef, currentBaseMapNameRef)"
       v-else
     >
-      <span v-if="responseMessageRef">{{ responseMessageRef }}</span>
+      <span v-if="responseMessageRef && responseMessageRef != '-'">{{ responseMessageRef }}</span>
       <span v-else>send ML request</span>
     </button>
 
@@ -23,7 +23,7 @@
   </div>
   <br />
   <div v-if="responseMessageRef === waitingString" />
-  <h1 v-else-if="responseMessageRef">{{ responseMessageRef }}</h1>
+  <h1 v-else-if="responseMessageRef || responseMessageRef == '-'">{{ responseMessageRef }}</h1>
   <div v-else>
     <p>duration request: {{ durationRef }}</p>
     <p>number Of Polygons: {{ numberOfPolygonsRef }}</p>

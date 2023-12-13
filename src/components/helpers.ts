@@ -180,7 +180,7 @@ const updateLayerOnCreateOrEditEvent = (
   event: LEvented,
   getPopupContentPointFn: (arg0: LEvented, arg1: number) => HTMLDivElement,
   promptsArrayRef: Ref) => {
-  responseMessageRef.value = ''
+  responseMessageRef.value = '-'
   if (event.shape === 'IncludeMarkerPrompt' || event.shape === 'ExcludeMarkerPrompt') {
     const labelPoint = Number(excludeIncludeLabelPrompt[event.shape])
     const div = getPopupContentPointFn(event, labelPoint)
@@ -210,7 +210,7 @@ export const updateMapData = (
     });
   })
   localMap.on('pm:remove', (e: LEvented) => {
-    responseMessageRef.value = ''
+    responseMessageRef.value = '-'
     promptsArrayRef.value = removeEventFromArrayByIndex(promptsArrayRef.value, e)
   })
 }

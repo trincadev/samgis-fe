@@ -9,7 +9,7 @@ export const waitingString = "waiting..."
 export const durationRef = ref(0)
 export const numberOfPolygonsRef = ref(0)
 export const numberOfPredictedMasksRef = ref(0)
-export const responseMessageRef = ref("")
+export const responseMessageRef = ref("-")
 export const geojsonRef = ref("geojsonOutput-placeholder")
 // modified from https://github.com/for-GET/know-your-http-well/blob/master/json/status-codes.json
 export const htmlStatusMessages = [
