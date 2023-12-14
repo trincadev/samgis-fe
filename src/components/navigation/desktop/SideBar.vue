@@ -1,7 +1,7 @@
 <template>
   <aside class="fixed left-0 top-0 z-40 h-screen w-72 border-r pr-2" aria-label="Sidenav" id="drawer-navigation">
     <SideBarBrand class="pl-4 pt-4"/>
-    <div class="h-full overflow-y-auto">
+    <div class="h-full">
       <ul class="mt-5 space-y-2 border-t border-gray-200 pt-4 pl-4">
         <li><SideBarTab path="/" label="Home" /></li>
         <li><SideBarTab path="/blog" label="My blog" /></li>
