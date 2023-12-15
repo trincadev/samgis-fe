@@ -1,7 +1,7 @@
 <template>
   <div class="h-auto">
     <div class="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-8 border-r bg-gray-50">
-      <div class="h-screen rounded-lg bg-white">
+      <div class="h-[calc(100vh-80px)] rounded-lg bg-white">
 
         <div>
           <div id="map" class="map-predictions" />
@@ -43,7 +43,7 @@
         </div>
       </div>
 
-      <div class="h-full max-h-max rounded-lg bg-white border-dashed pl-4 pr-2">
+      <div class="h-[calc(100vh-80px)] rounded-lg pl-4 pr-2">
         <h1>ML request prompt</h1>
         <div v-if="promptsArrayRef.filter(el => {return el.type === 'point'}).length > 0">
           <TableGenericComponent
