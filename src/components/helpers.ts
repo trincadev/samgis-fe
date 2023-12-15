@@ -1,4 +1,4 @@
-import { icon, Evented as LEvented, LatLngTuple, Map as LMap } from 'leaflet'
+import L, { icon, Evented as LEvented, type LatLng, Map as LMap } from 'leaflet'
 import {
   responseMessageRef,
   waitingString,
@@ -10,13 +10,38 @@ import {
 import {
   ExcludeIncludeLabelPrompt as excludeIncludeLabelPrompt,
   type ArrayNumber,
-  type BboxLatLngTuple,
+  type BboxLatLng,
   type ExcludeIncludeLabelPrompt,
   type IBodyLatLngPoints,
   type IPointPrompt,
-  type IRectanglePrompt
+  type IRectanglePrompt, type IRectangleTable, type IPointTable
 } from './types.d.ts'
 import type { Ref } from 'vue'
+
+
+export const applyFnToObjectWithinArray = (array: Array<IPointPrompt | IRectanglePrompt>): Array<IPointTable | IRectangleTable> => {
+  let newArray = []
+  for (const el of array) {
+    newArray.push(el.type === 'rectangle' ? getUpdatedRectangle(el) : getUpdatedPoint(el))
+  }
+  return newArray
+}
+
+const getUpdatedPoint = (obj: IPointPrompt): IPointTable => {
+  return {
+    id: obj.id,
+    data: obj.data,
+    label: obj.label
+  }
+}
+
+const getUpdatedRectangle = (obj: IRectanglePrompt): IRectangleTable => {
+  return {
+    id: obj.id,
+    data_ne: obj.data.ne,
+    data_sw: obj.data.sw,
+  }
+}
 
 /** get a custom icon given a PNG path with its anchor/size values  */
 const getCustomIconMarker = (
@@ -93,18 +118,21 @@ export function setGeomanControls(localMap: LMap) {
 }
 
 /** get the selected rectangle layer bounding box coordinate */
-export const getSelectedRectangleCoordinatesBBox = (leafletEvent: LEvented): BboxLatLngTuple => {
-  const { _northEast: ne, _southWest: sw } = leafletEvent.layer._bounds
-  return { ne, sw }
+export const getSelectedRectangleCoordinatesBBox = (leafletEvent: LEvented): BboxLatLng => {
+  const { _northEast, _southWest } = leafletEvent.layer._bounds
+  return {
+    ne: new L.LatLng(_northEast.lat, _northEast.lng),
+    sw: new L.LatLng(_southWest.lat, _southWest.lng)
+  }
 }
 
 /** get the current selected point coordinate */
-export const getSelectedPointCoordinate = (leafletEvent: LEvented): LatLngTuple => {
+export const getSelectedPointCoordinate = (leafletEvent: LEvented): LatLng => {
   return leafletEvent.layer._latlng
 }
 
 /** get the current map bounding box coordinates */
-export const getExtentCurrentViewMapBBox = (leafletMap: LMap): BboxLatLngTuple => {
+export const getExtentCurrentViewMapBBox = (leafletMap: LMap): BboxLatLng => {
   const boundaries = leafletMap.getBounds()
   return { ne: boundaries.getNorthEast(), sw: boundaries.getSouthWest() }
 }
@@ -157,7 +185,7 @@ export const getGeoJSONRequest = async (
 
 /** populate a single point ML request prompt, by type (exclude or include), see type ExcludeIncludeLabelPrompt */
 export const getPointPromptElement = (e: LEvented, elementType: ExcludeIncludeLabelPrompt): IPointPrompt|IRectanglePrompt => {
-  const currentPointLayer: LatLngTuple = getSelectedPointCoordinate(e)
+  const currentPointLayer: LatLng = getSelectedPointCoordinate(e)
   return {
     id: e.layer._leaflet_id,
     type: 'point',

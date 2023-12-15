@@ -1,8 +1,8 @@
-import { Evented, LatLngTuple } from "leaflet";
+import { Evented, type LatLng } from "leaflet";
 
-export interface BboxLatLngTuple {
-    ne: LatLngTuple,
-    sw: LatLngTuple
+export interface BboxLatLng {
+    ne: LatLng,
+    sw: LatLng
 }
 
 export enum ExcludeIncludeLabelPrompt {
@@ -15,21 +15,33 @@ type RectanglePromptType = "rectangle"
 export interface IPointPrompt {
     id: Evented.layer._url,
     type: PointPromptType,
-    data: BboxLatLngTuple,
+    data: BboxLatLng,
     label: ExcludeIncludeLabelPrompt
 }
 
 export interface IRectanglePrompt {
-    id: Evented.layer._url,
+    id?: Evented.layer._url,
     type: RectanglePromptType,
     data: {
-        ne: BboxLatLngTuple,
-        sw: BboxLatLngTuple
+        ne: BboxLatLng,
+        sw: BboxLatLng
     }
+}
+
+export interface IPointTable {
+    id?: Evented.layer._url,
+    data: BboxLatLng,
+    label: ExcludeIncludeLabelPrompt
+}
+
+export interface IRectangleTable {
+    id?: Evented.layer._url,
+    data_ne: BboxLatLng,
+    data_sw: BboxLatLng
 }
   
 export interface IBodyLatLngPoints {
-    bbox: BboxLatLngTuple,
+    bbox: BboxLatLng,
     prompt: Array<IPointPrompt|IRectanglePrompt>,
     zoom: number,
     source_type: string

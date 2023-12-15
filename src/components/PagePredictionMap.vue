@@ -1,40 +1,76 @@
 <template>
-  <div>
-    <div id="map" class="map-predictions" />
+  <div class="h-auto">
+    <div class="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-8 border-r bg-gray-50">
+      <div class="h-screen rounded-lg bg-white">
 
-    <button
-      class="bg-gray-300 h-14 min-w-[240px] max-w-[240px] mt-2 mb-2 bg-opacity-50"
-      :disabled="promptsArrayRef.length == 0 || responseMessageRef === waitingString"
-      v-if="promptsArrayRef.length == 0 || responseMessageRef === waitingString"
-    >{{ responseMessageRef === waitingString ? responseMessageRef : "Empty prompt (disabled)" }}</button>
-    <button
-      class="bg-blue-300 h-14 min-w-[240px] max-w-[240px] mt-2 mb-2 p-2 whitespace-no-wrap overflow-hidden truncate"
-      @click="sendMLRequest(map, promptsArrayRef, currentBaseMapNameRef)"
-      v-else
-    >
-      <span v-if="responseMessageRef && responseMessageRef != '-'">{{ responseMessageRef }}</span>
-      <span v-else>send ML request</span>
-    </button>
+        <div>
+          <div id="map" class="map-predictions" />
 
-    <p>current zoom: {{ currentZoomRef }}</p>
-    <p>current map bbox: {{ currentMapBBoxRef }}</p>
-    <p>prompts array: {{ promptsArrayRef.length }} elements, {{ promptsArrayRef }}</p>
-    <p>current base map name/type: {{ currentBaseMapNameRef }}</p>
-  </div>
-  <br />
-  <div v-if="responseMessageRef === waitingString" />
-  <h1 v-else-if="responseMessageRef || responseMessageRef == '-'">{{ responseMessageRef }}</h1>
-  <div v-else>
-    <p>duration request: {{ durationRef }}</p>
-    <p>number Of Polygons: {{ numberOfPolygonsRef }}</p>
-    <p>number Of predicted masks: {{ numberOfPredictedMasksRef }}</p>
-    <p>geojson: {{ geojsonRef }}</p>
+          <button
+            class="bg-gray-300 h-14 min-w-[240px] max-w-[240px] mt-2 mb-2 bg-opacity-50"
+            :disabled="promptsArrayRef.length == 0 || responseMessageRef === waitingString"
+            v-if="promptsArrayRef.length == 0 || responseMessageRef === waitingString"
+          >{{ responseMessageRef === waitingString ? responseMessageRef : "Empty prompt (disabled)" }}</button>
+          <button
+            class="bg-blue-300 h-14 min-w-[240px] max-w-[240px] mt-2 mb-2 p-2 whitespace-no-wrap overflow-hidden truncate"
+            @click="sendMLRequest(map, promptsArrayRef, currentBaseMapNameRef)"
+            v-else
+          >
+            <span v-if="responseMessageRef && responseMessageRef != '-'">{{ responseMessageRef }}</span>
+            <span v-else>send ML request</span>
+          </button>
+
+          <div class="grid grid-cols-3 bg-white">
+            <StatsGrid :stats-array="[
+              {statName: 'current Zoom', statValue: currentZoomRef},
+              {statName: 'current map name/type', statValue: currentBaseMapNameRef},
+              {statName: 'prompt: points/rectangles number', statValue: promptsArrayRef.length},
+            ]" />
+          </div>
+
+          <div v-if="responseMessageRef === waitingString" />
+          <h1 v-else-if="responseMessageRef || responseMessageRef == '-'">{{ responseMessageRef }}</h1>
+          <div v-else>
+            <div class="grid grid-cols-3 bg-white">
+              <StatsGrid :stats-array="[
+                  {statName: 'request duration', statValue: `${durationRef.toFixed(2)}s`},
+                  {statName: 'polygons number', statValue: numberOfPolygonsRef},
+                  {statName: 'predicted masks number', statValue: numberOfPredictedMasksRef},
+                ]" />
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="h-full max-h-max rounded-lg bg-white border-dashed pl-4 pr-2">
+        <h1>ML request prompt</h1>
+        <div v-if="promptsArrayRef.filter(el => {return el.type === 'point'}).length > 0">
+          <TableGenericComponent
+            :header="['id', 'data', 'label']"
+            :rows="applyFnToObjectWithinArray(promptsArrayRef.filter(el => {return el.type === 'point'}))"
+            title="Points"
+            row-key="id"
+          />
+        </div>
+        <br/>
+        <div v-if="promptsArrayRef.filter(el => {return el.type === 'rectangle'}).length > 0">
+          <TableGenericComponent
+            :header="['id', 'data_ne', 'data_sw']"
+            :rows="applyFnToObjectWithinArray(promptsArrayRef.filter(el => {return el.type === 'rectangle'}))"
+            title="Rectangles"
+            row-key="id"
+          />
+        </div>
+      </div>
+
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import {
-  control as LeafletControl, Evented as LEvented, geoJSON as LeafletGeoJSON, type LatLngTuple,
+  control as LeafletControl, Evented as LEvented, geoJSON as LeafletGeoJSON, type LatLng,
   Map as LMap, map as LeafletMap, tileLayer, TileLayer as LTileLayer
 } from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -45,7 +81,6 @@ import { onMounted, ref, type Ref } from "vue";
 
 import {
   durationRef,
-  geojsonRef,
   numberOfPolygonsRef,
   numberOfPredictedMasksRef,
   OpenStreetMap,
@@ -55,6 +90,7 @@ import {
   waitingString
 } from './constants'
 import {
+  applyFnToObjectWithinArray,
   getExtentCurrentViewMapBBox,
   getGeoJSONRequest,
   getSelectedPointCoordinate,
@@ -62,6 +98,8 @@ import {
   updateMapData
 } from './helpers'
 import type { IBodyLatLngPoints, IPointPrompt, IRectanglePrompt, SourceTileType } from './types'
+import StatsGrid from '@/components/StatsGrid.vue'
+import TableGenericComponent from '@/components/TableGenericComponent.vue'
 
 const currentBaseMapNameRef = ref()
 const currentMapBBoxRef = ref()
@@ -74,14 +112,14 @@ type ServiceTiles = {
 
 const props = defineProps<{
   accessToken: string,
-  center: LatLngTuple,
+  center: LatLng,
   mapName: string,
   zoom: string
 }>()
 
 const getPopupContentPoint = (leafletEvent: LEvented, label: number): HTMLDivElement => {
   let popupContent: HTMLDivElement = document.createElement("div");
-  let currentPointLayer: LatLngTuple = getSelectedPointCoordinate(leafletEvent)
+  let currentPointLayer: LatLng = getSelectedPointCoordinate(leafletEvent)
 
   popupContent.innerHTML = `<span>lat:${JSON.stringify(currentPointLayer.lat)}<br/>`
   popupContent.innerHTML += `lng:${JSON.stringify(currentPointLayer.lng)}<br/>`
