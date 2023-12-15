@@ -1,9 +1,9 @@
 <template>
   <div class="h-auto">
-    <div class="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-8 border-r bg-gray-50">
-      <div class="h-[calc(100vh-80px)] rounded-lg bg-white">
+    <div class="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-8 border-r">
+      <div class="h-[calc(100vh-140px)] border-r min-w-[1032px] w-[1032px]">
 
-        <div>
+        <div class="pr-2">
           <div id="map" class="map-predictions" />
 
           <button
@@ -20,7 +20,7 @@
             <span v-else>send ML request</span>
           </button>
 
-          <div class="grid grid-cols-3 bg-white">
+          <div class="grid grid-cols-3">
             <StatsGrid :stats-array="[
               {statName: 'current Zoom', statValue: currentZoomRef},
               {statName: 'current map name/type', statValue: currentBaseMapNameRef},
@@ -31,7 +31,7 @@
           <div v-if="responseMessageRef === waitingString" />
           <h1 v-else-if="responseMessageRef || responseMessageRef == '-'">{{ responseMessageRef }}</h1>
           <div v-else>
-            <div class="grid grid-cols-3 bg-white">
+            <div class="grid grid-cols-3">
               <StatsGrid :stats-array="[
                   {statName: 'request duration', statValue: `${durationRef.toFixed(2)}s`},
                   {statName: 'polygons number', statValue: numberOfPolygonsRef},
@@ -43,7 +43,7 @@
         </div>
       </div>
 
-      <div class="h-[calc(100vh-80px)] rounded-lg pl-4 pr-2">
+      <div class="h-[calc(100vh-140px)] pl-2 pr-2 border-l border-3">
         <h1>ML request prompt</h1>
         <div v-if="promptsArrayRef.filter(el => {return el.type === 'point'}).length > 0">
           <TableGenericComponent
