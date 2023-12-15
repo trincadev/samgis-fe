@@ -23,10 +23,6 @@
 <script setup lang="ts">
 import Footer from "@/components/PageFooter.vue"
 import { useAuth0 } from '@auth0/auth0-vue'
-import LogoutButton from '@/components/buttons/LogoutButton.vue'
-import LoginButton from '@/components/buttons/LoginButton.vue'
-import SideBarTab from '@/components/navigation/desktop/SideBarTab.vue'
-import SideBarBrand from '@/components/navigation/desktop/SideBarBrand.vue'
 import SideBar from '@/components/navigation/desktop/SideBar.vue'
 
 const { isAuthenticated } = useAuth0();
