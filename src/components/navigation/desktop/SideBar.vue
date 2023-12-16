@@ -3,12 +3,12 @@
     <SideBarBrand class="pl-4 pt-4"/>
     <div class="h-full">
       <ul class="mt-5 space-y-2 border-t border-gray-200 pt-4 pl-4">
-        <li><SideBarTab path="/" label="Home" /></li>
-        <li><SideBarTab path="/blog" label="My blog" /></li>
-        <li><SideBarTab path="/docs" label="SamGIS Documentation" /></li>
+        <li><SideBarTab path="/" label="Home" alt-image="Home" path-image="/home-page.svg" /></li>
+        <li><SideBarTab path="/blog" label="My blog" alt-image="my blog" path-image="/blog.jpg"/></li>
+        <li><SideBarTab path="/docs" label="SamGIS Documentation" alt-image="samgis docs" path-image="api-docs.svg"/></li>
         <template v-if="isAuthenticated">
-          <li><SideBarTab path="/prediction-map" label="Prediction Map" /></li>
-          <li><SideBarTab path="/profile" label="User Profile" /></li>
+          <li><SideBarTab path="/prediction-map" label="Prediction Map" alt-image="prediction map" path-image="/prediction-map-bw.svg" /></li>
+          <li><SideBarTab path="/profile" label="User Profile" alt-image="user profile" path-image="/user-profile.svg" /></li>
         </template>
       </ul>
     </div>
