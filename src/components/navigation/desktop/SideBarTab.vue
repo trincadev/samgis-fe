@@ -12,7 +12,7 @@
       width="56"
       height="56"
     />
-    <NavBarTextElement class="ml-4 lg:hidden xl:inline">{{ props.label }}</NavBarTextElement>
+    <NavBarTextElement class="ml-4 hidden lg:inline">{{ props.label }}</NavBarTextElement>
     </router-link>
   </SideBarElement>
 </template>

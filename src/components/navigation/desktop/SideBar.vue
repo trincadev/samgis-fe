@@ -1,5 +1,5 @@
 <template>
-  <aside class="fixed left-0 top-0 z-40 h-screen border-r px-2 w-24 xl:w-64" aria-label="Sidenav" id="drawer-navigation">
+  <aside class="fixed left-0 top-0 z-40 h-screen border-r px-2 w-24 lg:w-64" aria-label="Sidenav" id="drawer-navigation">
     <SideBarBrand class="mt-4 mx-2"/>
     <div class="h-full">
       <ul class="mt-5 space-y-2 border-t border-gray-200">
@@ -15,8 +15,8 @@
     <ul class="absolute bottom-4 z-20 lg:flex">
       <li>
         <SideBarElement>
-          <LoginButton v-if="!isAuthenticated" class="w-20 xl:w-56" />
-          <LogoutButton v-else class="w-20 xl:w-56" />
+          <LoginButton v-if="!isAuthenticated" class="w-18 lg:w-56" />
+          <LogoutButton v-else class="w-18 lg:w-56" />
         </SideBarElement>
       </li>
     </ul>

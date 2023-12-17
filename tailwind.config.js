@@ -9,6 +9,7 @@ export default {
   theme: {
     extend: {
       screens: {
+        'lg': '1200px',
         'xl': '1380px',
         '2xl': '2360px',
         // => @media (min-width: 1536px) { ... }

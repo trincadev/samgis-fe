@@ -7,7 +7,7 @@
         width="56"
         height="56"
       />
-      <NavBarTextElement class="ml-4 lg:hidden xl:inline">SamGIS</NavBarTextElement>
+      <NavBarTextElement class="ml-4 hidden lg:inline">SamGIS</NavBarTextElement>
     </router-link>
   </SideBarElement>
 </template>
