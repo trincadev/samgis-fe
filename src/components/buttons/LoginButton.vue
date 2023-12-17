@@ -1,7 +1,13 @@
 <template>
   <ButtonComponent :click="handleLogin" class="bg-green-400">
-    <img alt="login" class="h-12 opacity-75" src="/login.svg" />
-    <NavBarTextElement>LogIn</NavBarTextElement>
+    <img
+      alt="login"
+      class="opacity-75"
+      src="/login.svg"
+      width="48"
+      height="48"
+    />
+    <NavBarTextElement class="ml-4">LogIn</NavBarTextElement>
   </ButtonComponent>
 </template>
 

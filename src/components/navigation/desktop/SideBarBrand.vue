@@ -1,13 +1,13 @@
 <template>
   <SideBarElement>
-    <router-link class="no-underline inline-flex items-center p-2" to="/">
+    <router-link class="no-underline inline-flex items-center" to="/">
       <img
         src="/icon.svg"
         alt="GIS logo"
-        width="64"
-        height="64"
+        width="56"
+        height="56"
       />
-      <NavBarTextElement>SamGIS</NavBarTextElement>
+      <NavBarTextElement class="ml-4">SamGIS</NavBarTextElement>
     </router-link>
   </SideBarElement>
 </template>

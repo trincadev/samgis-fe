@@ -1,18 +1,18 @@
 <template>
-  <SideBarElement class="pt-4 pb-4">
+  <SideBarElement>
     <router-link
       :to="props.path"
       exact
-      class="no-underline inline-flex items-center border-blue-400 text-xl p-2"
-      active-class="border-b-4 bg-blue-100 p-2"
+      class="no-underline inline-flex items-center border-blue-400 text-xl pl-2 pr-2"
+      active-class="border-b-4 bg-blue-100"
     >
     <img
       :src="props.pathImage"
       :alt="props.altImage"
-      width="64"
-      height="64"
+      width="56"
+      height="56"
     />
-    <NavBarTextElement>{{ props.label }}</NavBarTextElement>
+    <NavBarTextElement class="ml-4">{{ props.label }}</NavBarTextElement>
     </router-link>
   </SideBarElement>
 </template>

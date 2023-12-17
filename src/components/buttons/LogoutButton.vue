@@ -1,7 +1,13 @@
 <template>
     <ButtonComponent :click="handleLogout" class="bg-purple-400">
-      <img alt="logout" class="h-12 opacity-75" src="/logout.svg" />
-      <NavBarTextElement>Logout</NavBarTextElement>
+      <img
+        alt="logout"
+        class="opacity-75"
+        src="/logout.svg"
+        width="48"
+        height="48"
+      />
+      <NavBarTextElement class="ml-4">Logout</NavBarTextElement>
     </ButtonComponent>
 </template>
 
