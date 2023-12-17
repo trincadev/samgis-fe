@@ -1,10 +1,11 @@
 <template>
   <div class="h-auto">
-    <div class="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-8 border-r">
-      <div class="h-[calc(100vh-140px)] border-r min-w-[1032px] w-[1032px]">
+    <div class="grid grid-cols-1 gap-4 2xl:grid-cols-2 2xl:gap-8 border-r">
+      <!--  -->
+      <div class="h-[calc(82vh-140px)] min-h-[calc(82vh-140px)] border-r min-w-[1032px] w-[1032px]">
 
         <div class="pr-2">
-          <div id="map" class="map-predictions" />
+          <div id="map" class="map-predictions"/>
 
           <button
             class="bg-gray-300 h-14 min-w-[240px] max-w-[240px] mt-2 mb-2 bg-opacity-50"
@@ -43,7 +44,7 @@
         </div>
       </div>
 
-      <div class="h-[calc(100vh-140px)] pl-2 pr-2 border-l border-3">
+      <div class="pl-2 pr-2 border-l border-3">
         <h1>ML request prompt</h1>
         <div v-if="promptsArrayRef.filter(el => {return el.type === 'point'}).length > 0">
           <TableGenericComponent

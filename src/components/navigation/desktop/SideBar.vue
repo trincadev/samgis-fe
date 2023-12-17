@@ -1,6 +1,6 @@
 <template>
-  <aside class="fixed left-0 top-0 z-40 h-screen w-72 border-r px-2" aria-label="Sidenav" id="drawer-navigation">
-    <SideBarBrand class="mt-4"/>
+  <aside class="fixed left-0 top-0 z-40 h-screen border-r px-2 w-28 xl:w-72" aria-label="Sidenav" id="drawer-navigation">
+    <SideBarBrand class="mt-4 mx-2"/>
     <div class="h-full">
       <ul class="mt-5 space-y-2 border-t border-gray-200">
         <li><SideBarTab path="/" label="Home" alt-image="Home" path-image="/home-page.svg" /></li>
@@ -15,8 +15,8 @@
     <ul class="absolute bottom-4 z-20 lg:flex">
       <li>
         <SideBarElement>
-          <LoginButton v-if="!isAuthenticated" class="w-56" />
-          <LogoutButton v-else class="w-56" />
+          <LoginButton v-if="!isAuthenticated" class="w-20 xl:w-56" />
+          <LogoutButton v-else class="w-20 xl:w-56" />
         </SideBarElement>
       </li>
     </ul>

@@ -7,7 +7,7 @@
       width="48"
       height="48"
     />
-    <NavBarTextElement class="ml-4">LogIn</NavBarTextElement>
+    <NavBarTextElement class="ml-4 lg:hidden xl:inline">LogIn</NavBarTextElement>
   </ButtonComponent>
 </template>
 

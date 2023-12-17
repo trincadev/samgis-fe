@@ -3,11 +3,11 @@
     <router-link class="no-underline inline-flex items-center" to="/">
       <img
         src="/icon.svg"
-        alt="GIS logo"
+        alt="SamGIS logo"
         width="56"
         height="56"
       />
-      <NavBarTextElement class="ml-4">SamGIS</NavBarTextElement>
+      <NavBarTextElement class="ml-4 lg:hidden xl:inline">SamGIS</NavBarTextElement>
     </router-link>
   </SideBarElement>
 </template>

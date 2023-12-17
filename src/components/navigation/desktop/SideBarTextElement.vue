@@ -1,6 +1,6 @@
 <template>
   <SideBarElement>
-    <div class="text-xl font-semibold leading-10">
+    <div class="text-lg font-semibold leading-10">
       <slot></slot>
     </div>
   </SideBarElement>
