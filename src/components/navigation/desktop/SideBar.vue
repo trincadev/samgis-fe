@@ -1,5 +1,5 @@
 <template>
-  <aside class="fixed left-0 top-0 z-40 h-screen border-r px-2 w-28 xl:w-72" aria-label="Sidenav" id="drawer-navigation">
+  <aside class="fixed left-0 top-0 z-40 h-screen border-r px-2 w-24 xl:w-64" aria-label="Sidenav" id="drawer-navigation">
     <SideBarBrand class="mt-4 mx-2"/>
     <div class="h-full">
       <ul class="mt-5 space-y-2 border-t border-gray-200">
