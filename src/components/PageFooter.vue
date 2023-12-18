@@ -1,6 +1,6 @@
 <template>
   <!-- style 'z-index: 1001' here is needed to avoid override from leafletjs css -->
-  <footer class="fixed bottom-0 w-full bg-gray-200 font-medium pl-2">
+  <footer class="fixed bottom-0 w-full bg-gray-200 pl-2 font-light text-sm">
     <p>
       <span>SamGIS: An inference machine learning POC applied to GIS thanks to
         <PageFooterHyperlink path="https://github.com/vietanhdev/samexporter/">SAM Exporter</PageFooterHyperlink>

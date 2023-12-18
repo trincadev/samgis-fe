@@ -9,9 +9,11 @@ export default {
   theme: {
     extend: {
       screens: {
+        '2md': '1024px',
+        // 'md': '1024px',
         'lg': '1200px',
         'xl': '1380px',
-        '2xl': '2360px',
+        '3xl': '2360px',
         // => @media (min-width: 1536px) { ... }
       },
       fontFamily: {

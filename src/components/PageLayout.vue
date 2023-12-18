@@ -7,7 +7,7 @@
 
       <!-- style 'z-index: 1001' here is needed to avoid override from leafletjs css -->
       <h1 class="fixed top-0 h-16 w-full bg-gray-200 pl-2 pt-4" style="z-index: 9999">{{  props.pageTitle }}</h1>
-      <div class="pt-20">
+      <div class="pt-20 pb-6">
         <slot></slot>
       </div>
 

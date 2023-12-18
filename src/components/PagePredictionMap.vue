@@ -1,10 +1,10 @@
 <template>
   <div class="h-auto">
-    <div class="grid grid-cols-1 gap-4 2xl:grid-cols-2 2xl:gap-8 border-r">
-      <!--  -->
-      <div class="h-[calc(82vh-140px)] min-h-[calc(82vh-140px)] border-r min-w-[1032px] w-[1032px]">
+    <div class="grid grid-cols-1 gap-4 3xl:grid-cols-2 3xl:gap-8 border-r">
 
-        <div class="pr-2">
+      <div class="border-r min-h-[calc(45vh-140px)] lg:min-w-[1032px] lg:w-[1032px] lg:min-h-[calc(82vh-140px)]">
+
+        <div class="pr-2 p-2" id="id-map-cont">
           <div id="map" class="map-predictions"/>
 
           <button
@@ -21,7 +21,7 @@
             <span v-else>send ML request</span>
           </button>
 
-          <div class="grid grid-cols-3">
+          <div class="grid grid-cols-1 md:grid-cols-3">
             <StatsGrid :stats-array="[
               {statName: 'current Zoom', statValue: currentZoomRef},
               {statName: 'current map name/type', statValue: currentBaseMapNameRef},
@@ -32,7 +32,7 @@
           <div v-if="responseMessageRef === waitingString" />
           <h1 v-else-if="responseMessageRef || responseMessageRef == '-'">{{ responseMessageRef }}</h1>
           <div v-else>
-            <div class="grid grid-cols-3">
+            <div class="grid grid-cols-1 md:grid-cols-3">
               <StatsGrid :stats-array="[
                   {statName: 'request duration', statValue: `${durationRef.toFixed(2)}s`},
                   {statName: 'polygons number', statValue: numberOfPolygonsRef},
@@ -61,6 +61,7 @@
             :rows="applyFnToObjectWithinArray(promptsArrayRef.filter(el => {return el.type === 'rectangle'}))"
             title="Rectangles"
             row-key="id"
+            class="2md:min-h-[100px]"
           />
         </div>
       </div>
@@ -108,7 +109,7 @@ const currentZoomRef = ref()
 const promptsArrayRef: Ref<Array<IPointPrompt | IRectanglePrompt>> = ref([])
 let map: LMap
 type ServiceTiles = {
-    [key: SourceTileType]: LTileLayer;
+  [key: SourceTileType]: LTileLayer;
 };
 
 const props = defineProps<{
@@ -209,10 +210,51 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-
+/**
+{384: 256.5}
+{448: 299.25}
+{512: 342.0}
+{576: 384.75}
+{640: 427.5}
+{704: 470.25}
+{768: 513.0}
+{832: 555.75}
+{896: 598.5}
+{960: 641.25}
+ */
 .map-predictions {
   width: 1024px;
   height: 684px;
   position: relative;
+}
+@media only screen and (max-width: 1322px) {
+  .map-predictions {
+    width: 960px;
+    height: 641px;
+  }
+}
+@media only screen and (max-width: 1200px) {
+  .map-predictions {
+    width: 896px;
+    height: 598px;
+  }
+}
+@media only screen and (max-width: 1040px) {
+  .map-predictions {
+    width: 768px;
+    height: 513px;
+  }
+}
+@media only screen and (max-width: 912px) {
+  .map-predictions {
+    width: 640px;
+    height: 427px;
+  }
+}
+@media only screen and (max-width: 780px) {
+  .map-predictions {
+    width: 512px;
+    height: 342px;
+  }
 }
 </style>
