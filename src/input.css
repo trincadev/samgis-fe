@@ -5,7 +5,7 @@
         @apply box-border;
     }
     h1 {
-        @apply text-3xl;
+        @apply text-xl font-bold md:text-3xl;
     }
     a {
         @apply underline;
