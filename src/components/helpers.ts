@@ -46,7 +46,7 @@ const getUpdatedRectangle = (obj: IRectanglePrompt): IRectangleTable => {
 /** get a custom icon given a PNG path with its anchor/size values  */
 const getCustomIconMarker = (
   iconUrlNoExt: string,
-  shadowUrl = '/public/marker-shadow.png',
+  shadowUrl = '/marker-shadow.png',
   iconSize: ArrayNumber = [25, 41],
   iconAnchor: ArrayNumber = [12, 41],
   popupAnchor: ArrayNumber = [1, -34],
@@ -96,13 +96,13 @@ export function setGeomanControls(localMap: LMap) {
     getCustomGeomanActionsObject('IncludeMarkerPrompt', 'Marker that add recognition regions from SAM prompt requests', actionArray)
   )
   includeMarkerControl.drawInstance.setOptions({
-    markerStyle: { icon: getCustomIconMarker('/public/marker-icon-include') }
+    markerStyle: { icon: getCustomIconMarker('/marker-icon-include') }
   })
   const excludeMarkerControl = localMap.pm.Toolbar.copyDrawControl('Marker',
     getCustomGeomanActionsObject('ExcludeMarkerPrompt', 'Marker that remove recognition regions from SAM prompt requests', actionArray)
   )
   excludeMarkerControl.drawInstance.setOptions({
-    markerStyle: { icon: getCustomIconMarker('/public/marker-icon-exclude') }
+    markerStyle: { icon: getCustomIconMarker('/marker-icon-exclude') }
   })
   localMap.pm.Toolbar.copyDrawControl('Rectangle', {
     name: 'RectanglePrompt',

@@ -4,7 +4,7 @@
     <div class="h-full">
       <ul class="mt-5 space-y-2 border-t border-gray-200">
         <li><SideBarTab path="/" label="Home" alt-image="Home" path-image="/home-page.svg" /></li>
-        <li><SideBarTab path="/blog" label="My blog" alt-image="my blog" path-image="/blog.jpg"/></li>
+        <li><SideBarTab path="/blog" label="My blog" alt-image="my blog" path-image="/blog.svg"/></li>
         <li><SideBarTab path="/docs" label="SamGIS Documentation" alt-image="samgis docs" path-image="api-docs.svg"/></li>
         <template v-if="isAuthenticated">
           <li><SideBarTab path="/prediction-map" label="Prediction Map" alt-image="prediction map" path-image="/prediction-map-bw.svg" /></li>
