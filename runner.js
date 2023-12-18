@@ -34,9 +34,10 @@ console.log(`to finally exec the command: '${commands["COMMAND2"]}'`)
 console.log("...")
 
 console.log("run the ESCAPED exec_string:", execString)
-const shouldProceed = confirm("Do you want to proceed?");
-console.log("Should proceed?", shouldProceed);
-if (!shouldProceed) {
+const shouldProceed = prompt("Do you want to proceed? [y/N] ");
+const check = shouldProceed.toLowerCase()[0] === "y"
+console.log("Should proceed?", shouldProceed, check);
+if (!check) {
     console.log("exit...");
     Deno.exit(1);
 }
