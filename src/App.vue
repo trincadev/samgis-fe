@@ -1,8 +1,9 @@
 <template>
-  <div class="mr-4 mb-4 ml-4">
+  <div class="hidden md:inline md:mr-4 md:mb-4 md:ml-4">
     <PageLoader v-if="isLoading"/>
     <router-view v-else />
   </div>
+  <div class="inline md:hidden">mobile...</div>
 </template>
 
 <script setup lang="ts">
