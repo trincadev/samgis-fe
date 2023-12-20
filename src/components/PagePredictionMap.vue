@@ -1,17 +1,18 @@
 <template>
   <div class="h-auto">
-    <div class="grid grid-cols-1 gap-4 3xl:grid-cols-2 3xl:gap-8 border-r">
+    <div class="grid grid-cols-1 2xl:grid-cols-5 gap-1 border-r">
 
-      <div class="border-r min-h-[calc(45vh-140px)] lg:min-w-[1032px] lg:w-[1032px] lg:min-h-[calc(82vh-140px)]">
+      <div class="border-r col-span-3">
 
         <div class="pr-2 p-2" id="id-map-cont">
-          <div id="map" class="map-predictions"/>
+          <div id="map" class="map-predictions" />
 
           <button
             class="bg-gray-300 h-14 min-w-[240px] max-w-[240px] mt-2 mb-2 bg-opacity-50"
             :disabled="promptsArrayRef.length == 0 || responseMessageRef === waitingString"
             v-if="promptsArrayRef.length == 0 || responseMessageRef === waitingString"
-          >{{ responseMessageRef === waitingString ? responseMessageRef : "Empty prompt (disabled)" }}</button>
+          >{{ responseMessageRef === waitingString ? responseMessageRef : 'Empty prompt (disabled)' }}
+          </button>
           <button
             class="bg-blue-300 h-14 min-w-[240px] max-w-[240px] mt-2 mb-2 p-2 whitespace-no-wrap overflow-hidden truncate"
             @click="sendMLRequest(map, promptsArrayRef, currentBaseMapNameRef)"
@@ -21,6 +22,13 @@
             <span v-else>send ML request</span>
           </button>
 
+        </div>
+      </div>
+
+      <div class="col-span-2">
+        <div class="pl-2 pr-2 border-l border-3">
+
+          <h1>Map Info</h1>
           <div class="grid grid-cols-1 md:grid-cols-3">
             <StatsGrid :stats-array="[
               {statName: 'current Zoom', statValue: currentZoomRef},
@@ -40,11 +48,8 @@
                 ]" />
             </div>
           </div>
-
         </div>
-      </div>
 
-      <div class="pl-2 pr-2 border-l border-3">
         <h1>ML request prompt</h1>
         <div v-if="promptsArrayRef.filter(el => {return el.type === 'point'}).length > 0">
           <TableGenericComponent
@@ -54,7 +59,7 @@
             row-key="id"
           />
         </div>
-        <br/>
+        <br />
         <div v-if="promptsArrayRef.filter(el => {return el.type === 'rectangle'}).length > 0">
           <TableGenericComponent
             :header="['id', 'data_ne', 'data_sw']"
@@ -72,14 +77,20 @@
 
 <script lang="ts" setup>
 import {
-  control as LeafletControl, Evented as LEvented, geoJSON as LeafletGeoJSON, type LatLng,
-  Map as LMap, map as LeafletMap, tileLayer, TileLayer as LTileLayer
-} from "leaflet";
-import "leaflet/dist/leaflet.css";
-import 'leaflet-providers';
-import "@geoman-io/leaflet-geoman-free";
-import "@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css";
-import { onMounted, ref, type Ref } from "vue";
+  control as LeafletControl,
+  Evented as LEvented,
+  geoJSON as LeafletGeoJSON,
+  type LatLng,
+  Map as LMap,
+  map as LeafletMap,
+  tileLayer,
+  TileLayer as LTileLayer
+} from 'leaflet'
+import 'leaflet/dist/leaflet.css'
+import 'leaflet-providers'
+import '@geoman-io/leaflet-geoman-free'
+import '@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css'
+import { onMounted, ref, type Ref } from 'vue'
 
 import {
   durationRef,
@@ -120,7 +131,7 @@ const props = defineProps<{
 }>()
 
 const getPopupContentPoint = (leafletEvent: LEvented, label: number): HTMLDivElement => {
-  let popupContent: HTMLDivElement = document.createElement("div");
+  let popupContent: HTMLDivElement = document.createElement('div')
   let currentPointLayer: LatLng = getSelectedPointCoordinate(leafletEvent)
 
   popupContent.innerHTML = `<span>lat:${JSON.stringify(currentPointLayer.lat)}<br/>`
@@ -152,7 +163,7 @@ const sendMLRequest = async (leafletMap: LMap, promptRequest: Array<IPointPrompt
   console.log('sendMLRequest:: bodyRequest: ', bodyRequest)
   const geojsonOutputOnMounted = await getGeoJSONRequest(bodyRequest, '/api/ml-fastsam/', props.accessToken)
   const featureNew = LeafletGeoJSON(geojsonOutputOnMounted)
-  console.log("featureNew::", typeof featureNew, "|", featureNew)
+  console.log('featureNew::', typeof featureNew, '|', featureNew)
   leafletMap.addLayer(featureNew)
 }
 
@@ -174,8 +185,8 @@ const getCurrentBasemap = (url: string, providersArray: ServiceTiles) => {
 onMounted(async () => {
   const osmTile = tileLayer.provider(OpenStreetMap)
   let localVarSatellite: SourceTileType = import.meta.env.VITE_SATELLITE_NAME ? String(import.meta.env.VITE_SATELLITE_NAME) : Satellite
-  console.log("Satellite:", Satellite)
-  console.log("localVarSatellite:", localVarSatellite)
+  console.log('Satellite:', Satellite)
+  console.log('localVarSatellite:', localVarSatellite)
   const satelliteTile = tileLayer.provider(localVarSatellite)
 
   let baseMaps: ServiceTiles = { OpenStreetMap: osmTile }
@@ -186,21 +197,21 @@ onMounted(async () => {
     center: props.center,
     zoom: Number(props.zoom),
     layers: [osmTile]
-  });
+  })
   map.attributionControl.setPrefix(prefix)
-  LeafletControl.scale({ position: "bottomleft", imperial: false, metric: true }).addTo(map);
+  LeafletControl.scale({ position: 'bottomleft', imperial: false, metric: true }).addTo(map)
 
-  LeafletControl.layers(baseMaps).addTo(map);
+  LeafletControl.layers(baseMaps).addTo(map)
   setGeomanControls(map)
   updateZoomBboxMap(map)
 
-  map.on("zoomend", (e: LEvented) => {
+  map.on('zoomend', (e: LEvented) => {
     updateZoomBboxMap(map)
-  });
+  })
 
-  map.on("mouseup", (e: LEvented) => {
+  map.on('mouseup', (e: LEvented) => {
     currentMapBBoxRef.value = getExtentCurrentViewMapBBox(map)
-  });
+  })
 
   updateMapData(map, getPopupContentPoint, promptsArrayRef)
   map.on('baselayerchange', (e: LEvented) => {
@@ -223,38 +234,22 @@ onMounted(async () => {
 {960: 641.25}
  */
 .map-predictions {
-  width: 1024px;
-  height: 684px;
+  width: 80%;
+  aspect-ratio: 256/171;
   position: relative;
 }
-@media only screen and (max-width: 1322px) {
+
+@media only screen and (max-width: 1600px) {
   .map-predictions {
-    width: 960px;
-    height: 641px;
+    width: 100%;
+    aspect-ratio: 256/171;
   }
 }
-@media only screen and (max-width: 1200px) {
+
+@media only screen and (min-width: 2000px) {
   .map-predictions {
-    width: 896px;
-    height: 598px;
-  }
-}
-@media only screen and (max-width: 1040px) {
-  .map-predictions {
-    width: 768px;
-    height: 513px;
-  }
-}
-@media only screen and (max-width: 912px) {
-  .map-predictions {
-    width: 640px;
-    height: 427px;
-  }
-}
-@media only screen and (max-width: 780px) {
-  .map-predictions {
-    width: 512px;
-    height: 342px;
+    width: 100%;
+    aspect-ratio: 256/171;
   }
 }
 </style>

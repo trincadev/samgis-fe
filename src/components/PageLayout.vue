@@ -5,8 +5,8 @@
 
     <main class="h-auto ml-24 lg:ml-64">
       <!-- style 'z-index: 1001' here is needed to avoid override from leafletjs css -->
-      <h1 class="fixed top-0 h-10 md:h-16 w-full bg-gray-200 pl-2 pt-2 lg:pt-4" style="z-index: 9999">{{  props.pageTitle }}</h1>
-      <div class="pt-12 pl-2 pb-6">
+      <h1 class="fixed top-0 h-10 md:h-16 w-full bg-gray-200 pl-2 pt-2 md:pt-4" style="z-index: 9999">{{  props.pageTitle }}</h1>
+      <div class="pt-12 md:pt-20 pb-6">
         <slot></slot>
       </div>
 
