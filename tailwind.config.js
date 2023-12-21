@@ -34,8 +34,7 @@ export default {
         'lg': '1200px',
         'xl': '1380px',
         '2xl': '2000px',
-        '3xl': '2360px',
-        // => @media (min-width: 1536px) { ... }
+        '3xl': '2360px'
       },
       fontFamily: {
         sans: ['Inter var', ...defaultTheme.fontFamily.sans]

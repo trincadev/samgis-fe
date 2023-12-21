@@ -1,19 +1,20 @@
 <template>
-  <div class="">
+  <div class="relative min-h-screen lg:flex">
     <!-- Sidebar -->
     <SideBar />
 
-    <main class="h-auto ml-24 lg:ml-64">
-      <!-- style 'z-index: 1001' here is needed to avoid override from leafletjs css -->
-      <h1 class="fixed top-0 h-10 md:h-16 w-full bg-gray-200 pl-2 pt-2 md:pt-4" style="z-index: 9999">{{  props.pageTitle }}</h1>
-      <div class="pt-12 md:pt-20 pb-6">
+    <main id="content" class="flex-1 pb-12 space-y-6 px-2 overflow-y-auto lg:h-screen md:space-y-8">
+      <header class="hidden lg:flex items-center justify-between h-20 bg-gray-100 border-b sd:h-10">
+        <h1>{{  props.pageTitle }}</h1>
+      </header>
+
+      <section class="">
         <slot></slot>
-      </div>
+      </section>
 
       <div class="bottom-0 w-full text-black">
         <Footer></Footer>
       </div>
-
     </main>
   </div>
 
@@ -21,10 +22,7 @@
 
 <script setup lang="ts">
 import Footer from "@/components/PageFooter.vue"
-import { useAuth0 } from '@auth0/auth0-vue'
 import SideBar from '@/components/navigation/desktop/SideBar.vue'
-
-const { isAuthenticated } = useAuth0();
 
 const props = defineProps<{
   pageTitle: string

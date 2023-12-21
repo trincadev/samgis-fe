@@ -1,9 +1,8 @@
 <template>
-  <SideBarElement>
     <router-link
       :to="props.path"
       exact
-      class="no-underline inline-flex items-center border-blue-400 text-xl pl-2 pr-2"
+      class="no-underline border-blue-400"
       active-class="border-b-4 bg-blue-100"
     >
     <img
@@ -11,10 +10,7 @@
       :alt="props.altImage"
       width="56"
       height="56"
-    />
-    <NavBarTextElement class="ml-4 hidden lg:inline">{{ props.label }}</NavBarTextElement>
-    </router-link>
-  </SideBarElement>
+    /></router-link>
 </template>
 
 <script setup lang="ts">

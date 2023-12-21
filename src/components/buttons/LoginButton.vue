@@ -7,7 +7,6 @@
       width="48"
       height="48"
     />
-    <NavBarTextElement class="ml-4 hidden lg:inline">LogIn</NavBarTextElement>
   </ButtonComponent>
 </template>
 

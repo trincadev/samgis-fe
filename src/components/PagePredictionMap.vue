@@ -38,7 +38,7 @@
           </div>
 
           <div v-if="responseMessageRef === waitingString" />
-          <h1 v-else-if="responseMessageRef || responseMessageRef == '-'">{{ responseMessageRef }}</h1>
+          <h2 v-else-if="responseMessageRef || responseMessageRef == '-'" class="text-lg text-red-600">{{ responseMessageRef }}</h2>
           <div v-else>
             <div class="grid grid-cols-1 md:grid-cols-3">
               <StatsGrid :stats-array="[
@@ -86,10 +86,8 @@ import {
   tileLayer,
   TileLayer as LTileLayer
 } from 'leaflet'
-import 'leaflet/dist/leaflet.css'
 import 'leaflet-providers'
 import '@geoman-io/leaflet-geoman-free'
-import '@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css'
 import { onMounted, ref, type Ref } from 'vue'
 
 import {
@@ -220,36 +218,3 @@ onMounted(async () => {
 })
 </script>
 
-<style scoped>
-/**
-{384: 256.5}
-{448: 299.25}
-{512: 342.0}
-{576: 384.75}
-{640: 427.5}
-{704: 470.25}
-{768: 513.0}
-{832: 555.75}
-{896: 598.5}
-{960: 641.25}
- */
-.map-predictions {
-  width: 80%;
-  aspect-ratio: 256/171;
-  position: relative;
-}
-
-@media only screen and (max-width: 1600px) {
-  .map-predictions {
-    width: 100%;
-    aspect-ratio: 256/171;
-  }
-}
-
-@media only screen and (min-width: 2000px) {
-  .map-predictions {
-    width: 100%;
-    aspect-ratio: 256/171;
-  }
-}
-</style>
