@@ -8,7 +8,7 @@
             :mapName="mapName"
             zoom=13
             :accessToken="accessToken"
-            description="This page displays predictions made with a remote machine learning model living within an AWS Lambda."
+            description="This page displays predictions made with a remote machine learning model living within an AWS Lambda..."
           />
         </div>
       </div>
