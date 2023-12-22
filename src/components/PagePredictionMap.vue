@@ -1,7 +1,7 @@
 <template>
   <div class="h-auto">
 
-    <div class="grid grid-cols-1 2xl:grid-cols-5 pl-[3.2rem] lg:pl-0 lg:gap-1 lg:border-r">
+    <div class="grid grid-cols-1 2xl:grid-cols-5 lg:gap-1 lg:border-r">
 
       <div class="lg:border-r lg:col-span-3">
         <div id="id-map-cont">
