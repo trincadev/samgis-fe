@@ -1,32 +1,38 @@
 <template>
   <div class="h-auto">
-    <div class="grid grid-cols-1 2xl:grid-cols-5 gap-1 border-r">
 
-      <div class="border-r col-span-3">
+    <div class="grid grid-cols-1 2xl:grid-cols-5 pl-[3.2rem] lg:pl-0 lg:gap-1 lg:border-r">
 
-        <div class="pr-2 p-2" id="id-map-cont">
+      <div class="lg:border-r lg:col-span-3">
+        <div id="id-map-cont">
+          <p class="hidden lg:block">{{ description }}</p>
+          <div class="w-full md:pt-1 md:pb-1 lg:hidden">
+            <ButtonMapSendRequest
+              class="h-8 text-sm font-extralight min-w-[180px] max-w-[180px]"
+              :current-base-map-name="currentBaseMapNameRef"
+              :map="map"
+              :prompts-array="promptsArrayRef"
+              :response-message="responseMessageRef"
+              :send-m-l-request="sendMLRequest"
+              :waiting-string="waitingString"
+            />
+          </div>
           <div id="map" class="map-predictions" />
-
-          <button
-            class="bg-gray-300 h-14 min-w-[240px] max-w-[240px] mt-2 mb-2 bg-opacity-50"
-            :disabled="promptsArrayRef.length == 0 || responseMessageRef === waitingString"
-            v-if="promptsArrayRef.length == 0 || responseMessageRef === waitingString"
-          >{{ responseMessageRef === waitingString ? responseMessageRef : 'Empty prompt (disabled)' }}
-          </button>
-          <button
-            class="bg-blue-300 h-14 min-w-[240px] max-w-[240px] mt-2 mb-2 p-2 whitespace-no-wrap overflow-hidden truncate"
-            @click="sendMLRequest(map, promptsArrayRef, currentBaseMapNameRef)"
-            v-else
-          >
-            <span v-if="responseMessageRef && responseMessageRef != '-'">{{ responseMessageRef }}</span>
-            <span v-else>send ML request</span>
-          </button>
+          <ButtonMapSendRequest
+            class="h-14 min-w-[240px] max-w-[240px] mt-2 mb-2 hidden lg:block"
+            :current-base-map-name="currentBaseMapNameRef"
+            :map="map"
+            :prompts-array="promptsArrayRef"
+            :response-message="responseMessageRef"
+            :send-m-l-request="sendMLRequest"
+            :waiting-string="waitingString"
+          />
 
         </div>
       </div>
 
-      <div class="col-span-2">
-        <div class="pl-2 pr-2 border-l border-3">
+      <div class="lg:col-span-2">
+        <div class="lg:pl-2 lg:pr-2 lg:border-l lg:border-3">
 
           <h1>Map Info</h1>
           <div class="grid grid-cols-1 md:grid-cols-3">
@@ -111,8 +117,9 @@ import {
 import type { IBodyLatLngPoints, IPointPrompt, IRectanglePrompt, SourceTileType } from './types'
 import StatsGrid from '@/components/StatsGrid.vue'
 import TableGenericComponent from '@/components/TableGenericComponent.vue'
+import ButtonMapSendRequest from '@/components/buttons/ButtonMapSendRequest.vue'
 
-const currentBaseMapNameRef = ref()
+const currentBaseMapNameRef = ref("")
 const currentMapBBoxRef = ref()
 const currentZoomRef = ref()
 const promptsArrayRef: Ref<Array<IPointPrompt | IRectanglePrompt>> = ref([])
@@ -125,6 +132,7 @@ const props = defineProps<{
   accessToken: string,
   center: LatLng,
   mapName: string,
+  description: string,
   zoom: string
 }>()
 

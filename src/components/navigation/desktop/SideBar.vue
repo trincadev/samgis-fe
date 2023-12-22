@@ -3,8 +3,7 @@
     <span>☰</span>
   </button>
 
-  <div v-cloak :class="isOpen ? 'block' : 'hidden'" @click="isOpen = false" class="fixed inset-0 z-20 transition-opacity opacity-30 lg:hidden"></div>
-  <aside id="sidebar" :class="isOpen ? 'translate-x-0 ease-in' : '-translate-x-full ease-out'" class="fixed bg-gray-200 inset-y-0 left-0 z-30 flex flex-col w-[4.5rem] min-h-screen space-y-6 overflow-y-auto text-gray-100 transition duration-200 transform lg:translate-x-0 lg:relative lg:inset-0">
+  <aside id="sidebar" class="fixed bg-gray-200 inset-y-0 left-0 z-99999 flex flex-col w-[3.2rem] lg:w-[4.5rem] min-h-screen space-y-6 overflow-y-auto text-gray-100 transition duration-200 transform lg:translate-x-0 lg:relative lg:inset-0">
     <div class="flex flex-col items-center flex-1 space-y-6">
       <nav class="flex flex-col items-center space-y-6">
         <SideBarTab path="/" label="Home" alt-image="Home" path-image="/home-page.svg" />
@@ -17,9 +16,9 @@
       </nav>
     </div>
 
-    <div class="flex justify-center py-1 border-gray-600">
-      <LoginButton v-if="!isAuthenticated" class="w-18" />
-      <LogoutButton v-else class="w-18" />
+    <div class="flex justify-center border-gray-600 lg:py-1">
+      <LoginButton v-if="!isAuthenticated" class="w-12 mb-4 lg:w-18" />
+      <LogoutButton v-else class="w-12 mb-4 lg:w-18" />
     </div>
   </aside>
 

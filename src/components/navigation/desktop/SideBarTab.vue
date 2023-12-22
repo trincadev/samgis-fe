@@ -8,8 +8,7 @@
     <img
       :src="props.pathImage"
       :alt="props.altImage"
-      width="56"
-      height="56"
+      class="w-[36px] h-[36px] lg:w-[56px] lg:h-[56px]"
     /></router-link>
 </template>
 

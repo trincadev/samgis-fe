@@ -2,17 +2,24 @@
     width: 80%;
     aspect-ratio: 256/171;
     position: relative;
+    z-index: 999;
+    /*float: left;*/
 }
 @media only screen and (max-width: 1600px) {
     .map-predictions {
         width: 100%;
-        aspect-ratio: 256/171;
     }
 }
 @media only screen and (min-width: 2000px) {
     .map-predictions {
         width: 100%;
-        aspect-ratio: 256/171;
+    }
+}
+@media only screen and (max-width: 810px) and (max-height: 370px) {
+    .map-predictions {
+        height: 70%;
+        max-height: 70%;
+        /*float: right;*/
     }
 }
 .leaflet-retina .leaflet-control-layers-toggle {

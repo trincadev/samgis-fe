@@ -1,8 +1,6 @@
 <template>
   <PageLayout page-title="Prediction map page">
       <div>
-        <p>This page displays predictions made with a remote machine learning model living within an AWS Lambda.</p>
-
         <div id="map-container-md">
           <!-- {"lat":46.221324377125434,"lng":9.319281622674922}, zoom:12-->
           <PredictionMap
@@ -10,6 +8,7 @@
             :mapName="mapName"
             zoom=13
             :accessToken="accessToken"
+            description="This page displays predictions made with a remote machine learning model living within an AWS Lambda."
           />
         </div>
       </div>
