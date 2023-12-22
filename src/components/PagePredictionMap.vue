@@ -19,7 +19,7 @@
           </div>
           <div id="map" class="map-predictions" />
           <ButtonMapSendRequest
-            class="h-14 min-w-[240px] max-w-[240px] mt-2 mb-2 hidden md:block portrait:block"
+            class="h-8 min-w-[240px] max-w-[240px] mt-2 mb-2 hidden sd:h-14 md:block portrait:block"
             :current-base-map-name="currentBaseMapNameRef"
             :map="map"
             :prompts-array="promptsArrayRef"
