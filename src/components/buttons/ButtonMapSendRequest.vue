@@ -11,10 +11,7 @@
     v-else
   >
     <span v-if="responseMessage && responseMessage != '-'">{{ responseMessage }}</span>
-    <span v-else>
-      <span class="inline-block md:hidden">🔍</span>
-      <span class="hidden md:inline-block">🔍 send ML request</span>
-    </span>
+    <span v-else>🔍 send ML request</span>
   </button>
 </template>
 
