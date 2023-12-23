@@ -3,7 +3,7 @@
     :class="`${props.class} bg-gray-200 bg-opacity-50`"
     :disabled="promptsArray.length == 0 || responseMessage === waitingString"
     v-if="promptsArray.length == 0 || responseMessage === waitingString"
-  >{{ responseMessage === waitingString ? responseMessage : 'Empty prompt (disabled)' }}
+  >{{ responseMessage === waitingString ? responseMessage : '🚫 Empty prompt (disabled)' }}
   </button>
   <button
     :class="`${props.class} bg-blue-300 whitespace-no-wrap overflow-hidden truncate`"
@@ -11,7 +11,10 @@
     v-else
   >
     <span v-if="responseMessage && responseMessage != '-'">{{ responseMessage }}</span>
-    <span v-else>send ML request</span>
+    <span v-else>
+      <span class="inline-block md:hidden">🔍</span>
+      <span class="hidden md:inline-block">🔍 send ML request</span>
+    </span>
   </button>
 </template>
 
