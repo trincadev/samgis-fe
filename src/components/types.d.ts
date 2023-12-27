@@ -15,22 +15,19 @@ type RectanglePromptType = "rectangle"
 export interface IPointPrompt {
     id: Evented.layer._url,
     type: PointPromptType,
-    data: BboxLatLng,
+    data: LatLng,
     label: ExcludeIncludeLabelPrompt
 }
 
 export interface IRectanglePrompt {
     id?: Evented.layer._url,
     type: RectanglePromptType,
-    data: {
-        ne: BboxLatLng,
-        sw: BboxLatLng
-    }
+    data: BboxLatLng
 }
 
 export interface IPointTable {
     id?: Evented.layer._url,
-    data: BboxLatLng,
+    data: LatLng,
     label: ExcludeIncludeLabelPrompt
 }
 

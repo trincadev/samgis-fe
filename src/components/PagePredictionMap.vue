@@ -4,9 +4,9 @@
     <div class="grid grid-cols-1 2xl:grid-cols-5 lg:gap-1 lg:border-r">
 
       <div class="lg:border-r lg:col-span-3">
-        <div id="id-map-cont">
+        <div id="id-map-cont" class="ml-2 mt-2 md:ml-4 md:mr-4">
           <p class="hidden lg:block">{{ description }}</p>
-          <div class="w-full md:pt-1 md:pb-1 md:hidden portrait:hidden">
+          <div class="w-full md:pt-1 md:pb-1 lg:hidden portrait:xl:hidden">
             <ButtonMapSendRequest
               class="h-8 text-sm font-extralight min-w-[180px] max-w-[180px]"
               :current-base-map-name="currentBaseMapNameRef"
@@ -19,7 +19,7 @@
           </div>
           <div id="map" class="map-predictions" />
           <ButtonMapSendRequest
-            class="h-8 min-w-[240px] max-w-[240px] mt-2 mb-2 hidden sd:h-14 md:block portrait:block"
+            class="h-8 min-w-[240px] max-w-[240px] mt-2 mb-2 hidden sd:h-14 lg:block portrait:xl:block"
             :current-base-map-name="currentBaseMapNameRef"
             :map="map"
             :prompts-array="promptsArrayRef"
@@ -114,7 +114,7 @@ import {
   setGeomanControls,
   updateMapData
 } from './helpers'
-import type { IBodyLatLngPoints, IPointPrompt, IRectanglePrompt, SourceTileType } from './types'
+import type { BboxLatLng, IBodyLatLngPoints, IPointPrompt, IRectanglePrompt, SourceTileType } from './types'
 import StatsGrid from '@/components/StatsGrid.vue'
 import TableGenericComponent from '@/components/TableGenericComponent.vue'
 import ButtonMapSendRequest from '@/components/buttons/ButtonMapSendRequest.vue'
@@ -130,10 +130,9 @@ type ServiceTiles = {
 
 const props = defineProps<{
   accessToken: string,
-  center: LatLng,
+  mapBounds: Array<LatLng>,
   mapName: string,
-  description: string,
-  zoom: string
+  description: string
 }>()
 
 const getPopupContentPoint = (leafletEvent: LEvented, label: number): HTMLDivElement => {
@@ -200,10 +199,10 @@ onMounted(async () => {
   currentBaseMapNameRef.value = OpenStreetMap
 
   map = LeafletMap('map', {
-    center: props.center,
-    zoom: Number(props.zoom),
     layers: [osmTile]
   })
+  map.fitBounds(props.mapBounds)
+  console.log("bounds: ", map.getBounds())
   map.attributionControl.setPrefix(prefix)
   LeafletControl.scale({ position: 'bottomleft', imperial: false, metric: true }).addTo(map)
 

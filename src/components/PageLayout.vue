@@ -3,10 +3,9 @@
     <!-- Sidebar -->
     <SideBar />
 
-    <main id="content" class="flex-1 z-1 pb-12 ml-[3.3rem] lg:ml-0 mr-4 overflow-y-auto lg:space-y-6 md:pl-1 lg:h-screen">
-      <header class="hidden md:flex md:mb-1 portrait:flex portrait:mb-1 items-center justify-between h-10 portrait:md:h-16 bg-gray-200 border-b">
-        <h1 class="hidden portrait:md:block">{{  props.pageTitle }}</h1>
-        <h2 class="block text-sm font-bold portrait:sd:hidden">{{  props.pageTitle }}</h2>
+    <main id="content" class="flex-1 z-1 pb-12 ml-[3.3rem] lg:ml-0 mr-4 overflow-y-auto md:pl-1 lg:h-screen">
+      <header class="hidden items-center justify-between h-10 ml-2 landscape:md:flex portrait:sd:flex portrait:md:h-12 xl:h-16 bg-gray-200 border-b">
+        <h1 class="hidden sd:text-sm ml-2 md:block md:text-xl lg:text-3xl">{{  props.pageTitle }}</h1>
       </header>
 
       <div class="">
