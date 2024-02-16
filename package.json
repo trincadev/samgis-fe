@@ -1,7 +1,7 @@
 {
   "name": "ml-trinca",
   "version": "1.1.0",
-  "private": true,
+  "license": "Apache-2.0",
   "scripts": {
     "pnpm_dev": "vite",
     "dev": "deno run -A runner.js",
